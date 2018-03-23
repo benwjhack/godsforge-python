@@ -1,0 +1,38 @@
+0 - continue
+1 - exit
+2 - retry
+
+10 - register
+11 - login
+
+20 - global info
+	0 - everything
+	1 - cycle
+	2 - tiles
+	3 - players
+	4 - started
+	5 - single tile
+21 - player info
+	0 - dp generation
+	1 - domain names
+	2 - 'controlled' things
+
+30 - vote to advance cycle
+	0 - no
+	1 - yes
+
+40 - change name
+
+50 - message entity
+	0 - no mask
+	1 - mask
+51 - check messages
+
+60 - create entity
+	0 - land
+	1 - oscar
+
+100 - admin
+	0 - start game
+	1 - advance cycle
+	2 - evaluate arbitrary code

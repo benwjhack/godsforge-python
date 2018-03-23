@@ -1,0 +1,14 @@
+
+{
+"prompt": "What do you want to create?",
+"answers":
+	{
+	"land":
+		{
+		"position":
+			{
+			"prompt":"What position should the land be in? [int or 'any']"
+			}
+		}
+	}
+}

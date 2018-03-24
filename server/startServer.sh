@@ -2,7 +2,7 @@
 
 if [ -f serverPID.txt ]; then
 	echo "Killing previous server..."
-	./killServer.sh
+	./killServer.sh > /dev/null
 fi
 
 echo "Starting server"...

@@ -8,3 +8,9 @@ python init.py
 cd ../server
 ./killServer.sh
 cd ..
+
+echo ""
+echo ""
+echo "----SERVER OUTPUT----"
+echo ""
+cat server/logs/log.txt

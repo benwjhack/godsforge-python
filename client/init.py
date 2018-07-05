@@ -31,6 +31,11 @@ else:
 	subdomain1 = raw_input("Enter a subdomain:")
 	subdomain2 = raw_input("Enter a subdomain:")
 	message.send(11, 0, [secret, domain, subdomain1, subdomain2])
+	response = message.get()
+	if response["code"] == 3:
+		print response["param"][0]
+		import sys
+		sys.exit(1)
 
 print "Login successful!\n\n"
 print "Type a command, or 'help' to get information on commands"

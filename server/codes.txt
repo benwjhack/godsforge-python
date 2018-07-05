@@ -1,6 +1,7 @@
 0 - continue
 1 - exit
 2 - retry
+3 - exit error
 
 10 - register
 11 - login
@@ -31,6 +32,8 @@
 60 - create entity
 	0 - land
 	1 - oscar
+
+70 - same as block 60, but stored as order for turn of round
 
 100 - admin
 	0 - start game

@@ -24,9 +24,12 @@ def handle(sock, game):
 			return
 		message.send(0)
 	else:
-		if game.closed: return
+		if game.closed:
+			message.send(3, 0, ["Game closed- cannot join"])
+			return
 		
 		selectedPlayer = Player(game, None, *loginM["param"])
+		message.send(0)
 		
 		print "Registered player!"
 	
@@ -78,6 +81,8 @@ def handle(sock, game):
 			response = selectedPlayer.createLand(param[0], int(param[1]), int(param[2]), param[3])
 			game.addStory(param[4])
 			message.send(response)
+		
+		
 		
 		if code == 100:
 			#continue

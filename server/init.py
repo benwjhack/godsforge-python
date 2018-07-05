@@ -30,6 +30,7 @@ try:
 		t.daemon = True
 		t.start()
 except KeyboardInterrupt:
+	# Exiting normally wouldn't end attached daemon threads, hence we force a brutal system module exit to make sure the death is at least clean.
 	import sys
 	sys.exit(0)
 

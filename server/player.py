@@ -19,6 +19,8 @@ class Player:
 		self.gameIndex = -1
 		
 		game.addPlayer(self)
+		
+		self.orders = []
 	
 	def message(self, message):
 		self.messages.append(message)
@@ -35,6 +37,9 @@ class Player:
 		self.currentDP[dpType] -= LAND_COST
 		map.Land(self.game.map, self, self.game.map.getTile(x,y), LAND_COST, [], description)
 		return 0
+	
+	def addOrder(self, suborder, params):
+		self.orders.append([suborder, params])
 	
 	def load(self):
 		pass

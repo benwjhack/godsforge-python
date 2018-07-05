@@ -1,0 +1,8 @@
+Any server client interaction should be initiated by client, and receive a (single) response from the server (RESTFUL, I think).
+Maybe in later developement, listeners can be registered- but this is very far off. For now, constant polling should be used to simulate "real time" updates.
+
+For now, each server instance can only host one game- demand does not require more.
+
+TODO
+- Any github things.
+- Add a more secure authentication system.

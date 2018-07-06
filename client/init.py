@@ -40,6 +40,12 @@ else:
 print "Login successful!\n\n"
 print "Type a command, or 'help' to get information on commands"
 
+# Ideally each order would call a single function, as some orders require others- but for now I can't be bothered for ones I haven't yet copied
+
+def gameStarted(message):
+	message.send(20, 4)
+	return message.get()["param"][0] == "True"
+
 while 1:
 	order = raw_input().split(" ")
 	command = order[0].lower()
@@ -49,8 +55,8 @@ while 1:
 		message.send(20, 1)
 		print "It is Cycle %s" % (message.get()["param"][0])
 	elif "started" in command:
-		message.send(20, 4)
-		print "The game has" + (" " if message.get()["param"][0] == "True" else " not ") + "started"
+		started = gameStarted(message)
+		print "The game has" + (" " if started else " not ") + "started"
 	elif "player" in command:
 		message.send(20, 3)
 		print "\n".join(message.get()["param"])
@@ -88,6 +94,14 @@ while 1:
 		y = raw_input("y: ")
 		message.send(20, 5, [x, y])
 		print message.get()["param"][0]
+	elif "currentdp" in command:
+		# Errors occur if a player has the same name for multiple domains- they derserve this.
+		if not gameStarted(message):
+			print "Game not started, cannot check."
+			continue
+		message.send(21, 3)
+		response = message.get()["param"]
+		print "You currently have %s generic, %s %s, %s %s, and %s %s DP" % (response[0], response[1], domain, response[2], subdomain1, response[3], subdomain2)
 	elif "dp" in command:
 		message.send(21, 0)
 		response = message.get()

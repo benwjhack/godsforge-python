@@ -61,6 +61,8 @@ def handle(sock, game):
 				message.send(0, 0, [selectedPlayer.baseDP["generic"], selectedPlayer.baseDP[selectedPlayer.domainNames[0]], selectedPlayer.baseDP[selectedPlayer.domainNames[1]], selectedPlayer.baseDP[selectedPlayer.domainNames[2]]])
 			if subcode == 1:
 				message.send(0, 0, selectedPlayer.domainNames)
+			if subcode == 3:
+				message.send(0, 0, selectedPlayer.getCurrentDP())
 		
 		if code == 30:
 			game.vote(selectedPlayer, subcode)
@@ -75,7 +77,7 @@ def handle(sock, game):
 				result = game.sendMessage(selectedPlayer, int(param[0]), param[1])
 				message.send(result)
 		if code == 51:
-			message.send(0, 0, [str(message) for message in selectedPlayer.messages])
+			message.send(0, 0, [str(message1) for message1 in selectedPlayer.messages])
 		
 		if code == 60:
 			response = selectedPlayer.createLand(param[0], int(param[1]), int(param[2]), param[3])

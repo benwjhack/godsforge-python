@@ -48,6 +48,7 @@ class Game:
 			self.players[i].gameIndex = i
 	
 	def advanceCycle(self):
+		# Maybe rename this function to _advanceCycle, and make an adavanceCycle function to spin this function off as a thread- so as not to block server-client thread.
 		self.cycle += 1
 		print "\n----------------------------CYCLE %s----------------------------\n" % (self.cycle,)
 		self.initCycle()

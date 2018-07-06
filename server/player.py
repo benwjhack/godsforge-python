@@ -29,7 +29,11 @@ class Player:
 		self.currentDP = self.baseDP.copy()
 	
 	def getDPGeneration(self):
+		# Possible bug- this assumes order generic, domain, subdomain1, subdomain2 is preserved (same for getCurrentDP() )
 		return sum(self.baseDP.values()) # TODO: add 'controlled' stuffs' DP
+	
+	def getCurrentDP(self):
+		return self.currentDP.values()
 	
 	def createLand(self, dpType, x, y, description):
 		if self.currentDP[dpType] < LAND_COST:

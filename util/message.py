@@ -9,6 +9,12 @@ class Message():
 		self.socket = sock
 	
 	def encode(self, code, subcode, param):
+		if type(code) != int:
+			raise TypeError("Code must be an integer")
+		if type(subcode) != int:
+			raise TypeError("Subcode must be an integer")
+		if type(param) != list:
+			raise TypeError("Param must be a list")
 		param = [str(i).replace(":", "\c").replace(";", "\s").replace("\n", "\e") for i in param]
 		return str(code)+":"+str(subcode)+":"+';'.join(param)
 	

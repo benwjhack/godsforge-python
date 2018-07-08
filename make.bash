@@ -3,18 +3,17 @@
 # rm does not follow symlinks, just to reassure anyone who sees this.
 
 mkdir .temp
+rm build/*.zip
 
-cp -r server .temp
-cp -r client .temp
+cp -Lr server .temp
+cp -Lr client .temp
 
-rm .temp/server/util
-rm .temp/client/util
+# For some reason, zip insists on including a full relative path structure to the file you're zipping in the zip file- so to exclude .temp as a directory from the .zip, we move into it.
+cd .temp
 
-cp -r util .temp/server
-cp -r util .temp/client
+zip -r ../build/server.zip server --exclude **/*.pyc
+zip -r ../build/client.zip client --exclude **/*.pyc
 
-
-zip -r build/server.zip .temp/server
-zip -r build/client.zip .temp/client
+cd ..
 
 rm -r .temp

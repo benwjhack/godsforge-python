@@ -13,12 +13,22 @@ class Game:
 		self.map.initTiles(-4, 4, -4, 4)
 		Message.game = self
 		self.story = ""
+		self.orders = []
+	
+	def addOrder(self, player, order):
+		self.orders.append([player, order])
+		player.addOrder(order)
 	
 	def sendMessage(self, sender, receiverUID, content):
 		mask = str(sender)
 		message = Message(mask, content, receiverUID)
 		self.getEntity(receiverUID).message(message)
 		return 0
+	
+	def sendGameMessage(self, receiverUID, content):
+		mask = "Game"
+		message = Message(mask, content, receiverUID)
+		self.getEntity(receiverUID).message(message)
 	
 	def addStory(self, line):
 		if not line in self.story:
@@ -38,6 +48,12 @@ class Game:
 		self.resetVotes()
 		for player in self.players:
 			player.initCycle()
+		# Not sure if order will matter- since player.initCycle has already been called, players no longer remember their orders, even if the game does
+		for order in orders:
+			player, order = order
+			response = player.interpret(order)
+			formattedString = "The order %s has produced result code %s" %(str(order), response)
+			self.sendGameMessage(formattedString)
 	
 	def startGame(self):
 		print "\n----------------------------STARTING GAME----------------------------\n"

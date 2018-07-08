@@ -1,5 +1,6 @@
 
 import map
+import interpreter
 
 LAND_COST = 1
 
@@ -21,12 +22,16 @@ class Player:
 		game.addPlayer(self)
 		
 		self.orders = []
+		
+		self.interpreter = interpreter.Interpreter(game, self)
+		self.interpret = self.interpreter.interpret
 	
 	def message(self, message):
 		self.messages.append(message)
 	
 	def initCycle(self):
 		self.currentDP = self.baseDP.copy()
+		self.orders = []
 	
 	def getDPGeneration(self):
 		# Possible bug- this assumes order generic, domain, subdomain1, subdomain2 is preserved (same for getCurrentDP() )
@@ -42,8 +47,8 @@ class Player:
 		map.Land(self.game.map, self, self.game.map.getTile(x,y), LAND_COST, [], description)
 		return 0
 	
-	def addOrder(self, suborder, params):
-		self.orders.append([suborder, params])
+	def addOrder(self, order):
+		self.orders.append(order)
 	
 	def load(self):
 		pass
@@ -52,4 +57,5 @@ class Player:
 		pass
 	
 	def __str__(self):
+		# Maybe players shouldn't be uniquely identifiable (idk yet if UID's can be re-assigned once out of use)
 		return "%s (%s)" % (self.name, self.UID)

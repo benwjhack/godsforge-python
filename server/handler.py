@@ -79,12 +79,12 @@ def handle(sock, game):
 		if code == 51:
 			message.send(0, 0, [str(message1) for message1 in selectedPlayer.messages])
 		
-		if code == 60:
-			response = selectedPlayer.createLand(param[0], int(param[1]), int(param[2]), param[3])
-			game.addStory(param[4])
+		if code >= 60 and code < 70:
+			response = selectedPlayer.interpreter.interpret([code, subcode, param])
 			message.send(response)
 		
-		
+		if code >= 70 and code < 80:
+			game.addOrder(selectedPlayer, [code, subcode, param])
 		
 		if code == 100:
 			#continue

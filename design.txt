@@ -3,6 +3,12 @@ Maybe in later developement, listeners can be registered- but this is very far o
 
 For now, each server instance can only host one game- demand does not require more.
 
+Possible variance of which orders get done first, apart from first come first serve?
+
+I have a worry about orders being only discovered to be invalid at time of execution- more checks are definitely required client side, and maybe even server side, for player quality of life.
+
+I know that block 50 should also probably be capable of being in the orders, but I'm taking a break now- I'll finish the order system when I return, and fix that as well.
+
 TODO
 - Any github things.
 - Add a more secure authentication system.

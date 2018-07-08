@@ -29,6 +29,7 @@
 	0 - no mask
 	1 - mask
 51 - check messages
+52 - remove message
 
 60 - create entity
 	0 - land

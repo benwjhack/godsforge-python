@@ -111,7 +111,7 @@ while 1:
 		message.send(21, 1)
 		response = message.get()
 		print "Your greater domain is %s, and your subdomains are %s and %s" % tuple(response["param"])
-	elif "exit" in command:
+	elif "exit" in command or "stop" in command:
 		message.send(1)
 		message.socket.close()
 		break

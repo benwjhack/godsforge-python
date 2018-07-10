@@ -55,6 +55,8 @@ def handle(sock, game):
 				message.send(0, 0, [game.closed])
 			if subcode == 5:
 				message.send(0, 0, [str( game.map.getTile( int( param[0] ), int( param[1] ) ))])
+			if subcode == 6:
+				message.send(0, 0, [game.story])
 		
 		if code == 21:
 			if subcode == 0:
@@ -85,6 +87,7 @@ def handle(sock, game):
 		
 		if code >= 70 and code < 80:
 			game.addOrder(selectedPlayer, [code, subcode, param])
+			message.send(0)
 		
 		if code == 100:
 			#continue

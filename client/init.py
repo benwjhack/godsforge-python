@@ -46,6 +46,8 @@ def gameStarted(message):
 	message.send(20, 4)
 	return message.get()["param"][0] == "True"
 
+toggleDelay = False
+
 while 1:
 	order = raw_input().split(" ")
 	command = order[0].lower()
@@ -89,6 +91,10 @@ while 1:
 		response = message.get()
 		print response["param"]
 		print "\n\n".join(response["param"])
+	elif "story" in command:
+		message.send(20, 6)
+		response = message.get()
+		print response["param"][0]
 	elif "tile" in command:
 		x = raw_input("x: ")
 		y = raw_input("y: ")
@@ -111,7 +117,7 @@ while 1:
 		message.send(21, 1)
 		response = message.get()
 		print "Your greater domain is %s, and your subdomains are %s and %s" % tuple(response["param"])
-	elif "exit" in command or "stop" in command:
+	elif "exit" in command or "stop" in command or "quit" in command:
 		message.send(1)
 		message.socket.close()
 		break
@@ -130,12 +136,14 @@ while 1:
 			y = raw_input("y: ")
 			description = raw_input("Description (to be added in land description: ")
 			story = raw_input("Summary (to be added to list of events): ")
-			message.send(60, 0, [dpType, x, y, description, story])
+			message.send(60+(10 if toggleDelay else 0), 0, [dpType, x, y, description, story])
 		response = message.get()
 		if response["code"] == 0:
 			print "Success!"
 		else:
 			print "Failure..."
+	elif "delay" in command:
+		toggleDelay = not toggleDelay
 	else:
 		print "Unrecognised command: try again, or try 'help'"
 		continue

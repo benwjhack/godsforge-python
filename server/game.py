@@ -49,11 +49,11 @@ class Game:
 		for player in self.players:
 			player.initCycle()
 		# Not sure if order will matter- since player.initCycle has already been called, players no longer remember their orders, even if the game does
-		for order in orders:
+		for order in self.orders:
 			player, order = order
 			response = player.interpret(order)
 			formattedString = "The order %s has produced result code %s" %(str(order), response)
-			self.sendGameMessage(formattedString)
+			self.sendGameMessage(player.UID, formattedString)
 	
 	def startGame(self):
 		print "\n----------------------------STARTING GAME----------------------------\n"

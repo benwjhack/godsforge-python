@@ -17,8 +17,12 @@ class Interpreter:
 		player = self.player
 		
 		if subcode == 0: # Land
+			print str(player), "creating land with", param
 			response = player.createLand(param[0], int(param[1]), int(param[2]), param[3])
-			game.addStory(param[4])
+			if response == 0:
+				game.addStory(param[4])
+			else:
+				print "failed"
 			# Maybe include possibility for params as well? In case of error message?
 			return response # Maybe should be moved left one indent, so everything returns a response code?
 

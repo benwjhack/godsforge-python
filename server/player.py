@@ -41,6 +41,8 @@ class Player:
 		return self.currentDP.values()
 	
 	def createLand(self, dpType, x, y, description):
+		if sum([entity.type == "Land" for entity in self.game.map.getTile(x,y).children]) > 0: # If the tile already has a land
+			return 1
 		if self.currentDP[dpType] < LAND_COST:
 			return 1
 		self.currentDP[dpType] -= LAND_COST

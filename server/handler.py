@@ -14,10 +14,7 @@ def handle(sock, game):
 	selectedPlayer = None
 	if loginB:
 		# Do login stuff
-		for player in game.players:
-			if player.secret == loginM["param"][0]:
-				selectedPlayer = player
-				break
+		selectedPlayer = game.getPlayer(loginM["param"][0])
 		if not selectedPlayer:
 			message.send(2)
 			print "Player entered inavlid secret, killing thread..."

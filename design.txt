@@ -9,6 +9,10 @@ I have a worry about orders being only discovered to be invalid at time of execu
 
 I know that block 50 should also probably be capable of being in the orders, but I'm taking a break now- I'll finish the order system when I return, and fix that as well.
 
+In order to delete messages, messages need to be assigned UID's- I feel as though that will have odd consequences, but can't think of anything right now.
+Maybe a reply mechanic should be added- which would also use the aforementioned message UID's. Could perhaps have a seperate message ID system?
+
 TODO
 - Any github things.
 - Add a more secure authentication system.
+- Loading/saving (probably with pickle)

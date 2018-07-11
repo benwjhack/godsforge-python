@@ -6,7 +6,7 @@ LAND_COST = 1
 
 class Player:
 	
-	def __init__(self, game, uid, secret, domain, subdomain1, subdomain2):
+	def __init__(self, game, uid, secret, domain, subdomain1, subdomain2, uber=False):
 		self.game = game
 		if uid == None:
 			uid = game.generateUID()
@@ -19,7 +19,11 @@ class Player:
 		self.domainNames = [domain, subdomain1, subdomain2]
 		self.gameIndex = -1
 		
-		game.addPlayer(self)
+		if not uber:
+			game.addPlayer(self)
+		else:
+			self.baseDP = self.currentDP = {'generic': float("inf")}
+			self.name = "Game Master"
 		
 		self.orders = []
 		

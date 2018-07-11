@@ -1,4 +1,5 @@
 from map import Map
+from player import Player
 
 class Game:
 	
@@ -10,10 +11,25 @@ class Game:
 		self.cycle = 0
 		self.started = False
 		self.map = Map(self)
-		self.map.initTiles(-4, 4, -4, 4)
 		Message.game = self
 		self.story = ""
 		self.orders = []
+		self.masterPlayer = None
+	
+	def initGame(self):
+		self.map.initTiles(-4, 4, -4, 4)
+		
+		defaultMasterPassword = "insecure"
+		master = Player(self, None, defaultMasterPassword, "", "", "", uber=True)
+		self.masterPlayer = master
+	
+	def getPlayer(self, secret):
+		if self.masterPlayer.secret == secret:
+			return self.masterPlayer
+		for player in self.players:
+			if player.secret == secret:
+				return player
+		return None
 	
 	def addOrder(self, player, order):
 		self.orders.append([player, order])
@@ -83,7 +99,7 @@ class Game:
 	
 	@property
 	def entities(self):
-		return self.players + []
+		return self.players + [self.masterPlayer]
 	
 	def getEntity(self, UID):
 		for entity in self.entities:

@@ -17,6 +17,7 @@ if os.path.isfile(SAVEFILE):
 	pass
 else:
 	game = Game()
+	game.initGame()
 
 
 print "Starting server..."

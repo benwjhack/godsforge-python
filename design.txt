@@ -12,6 +12,8 @@ I know that block 50 should also probably be capable of being in the orders, but
 In order to delete messages, messages need to be assigned UID's- I feel as though that will have odd consequences, but can't think of anything right now.
 Maybe a reply mechanic should be added- which would also use the aforementioned message UID's. Could perhaps have a seperate message ID system?
 
+Probably cleaner to create entirely sepearate pieces of code for dealing with the master player, or maybe functions for transforming player code on it?
+
 TODO
 - Any github things.
 - Add a more secure authentication system.

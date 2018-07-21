@@ -27,7 +27,9 @@ class Message():
 		return info
 	
 	def get(self):
-		return self.decode(self.socket.readLine())
+		result = self.decode(self.socket.readLine())
+		if self.LOG: print result
+		return result
 	
 	def send(self, code, subcode=0, param=[]):
 		self.socket.sendLine(self.encode(code, subcode, param))

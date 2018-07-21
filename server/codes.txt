@@ -19,24 +19,27 @@
 	1 - domain names
 	2 - 'controlled' things
 	3 - current dp
+	4 - check messages
 
 30 - vote to advance cycle
 	0 - no
 	1 - yes
+
 
 40 - change name
 
 50 - message entity
 	0 - no mask
 	1 - mask
-51 - check messages
 52 - remove message
 
 60 - create entity
 	0 - land
 	1 - oscar
 
-70 - same as block 60, but stored as order for turn of round
+
+70 - contains parametres [code, subcode]+param to be stored as an order; only block 40 to 60 are valid as codes
+
 
 100 - admin
 	0 - start game

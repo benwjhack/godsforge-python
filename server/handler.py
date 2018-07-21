@@ -62,28 +62,19 @@ def handle(sock, game):
 				message.send(0, 0, selectedPlayer.domainNames)
 			if subcode == 3:
 				message.send(0, 0, selectedPlayer.getCurrentDP())
+			if subcode == 4:
+				message.send(0, 0, [str(message1) for message1 in selectedPlayer.messages])
 		
 		if code == 30:
 			game.vote(selectedPlayer, subcode)
 			message.send(0)
 		
-		if code == 40:
-			selectedPlayer.name = param[0]
-			message.send(0)
-		
-		if code == 50:
-			if subcode == 0:
-				result = game.sendMessage(selectedPlayer, int(param[0]), param[1])
-				message.send(result)
-		if code == 51:
-			message.send(0, 0, [str(message1) for message1 in selectedPlayer.messages])
-		
-		if code >= 60 and code < 70:
+		if code >= 40 and code < 70:
 			response = selectedPlayer.interpreter.interpret([code, subcode, param])
-			message.send(response)
+			message.send(*response)
 		
-		if code >= 70 and code < 80:
-			game.addOrder(selectedPlayer, [code, subcode, param])
+		if code == 70:
+			game.addOrder(selectedPlayer, [int(param[0]), int(param[1]), param[2:]])
 			message.send(0)
 		
 		if code == 100:

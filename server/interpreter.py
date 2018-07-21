@@ -7,8 +7,18 @@ class Interpreter:
 	
 	def interpret(self, order):
 		code, subcode, param = order
-		code = code % 10 # So as to disregard whether in block 70 or 80 - possible alternative if refactoring, as orders are stored, change the order code to the correct block (allows more versatile mapping)
-		if code == 0:
+		# Notably, the returned value is unpacked into message.send(), so a list must be returned, that can be a variable length of parametres
+		
+		if code == 40:
+			self.player.name = param[0]
+			return [0]
+		
+		if code == 50:
+			if subcode == 0:
+				result = self.game.sendMessage(self.player, int(param[0]), param[1])
+				return [result]
+		
+		if code == 60:
 			return self.create(subcode, param)
 	
 	def create(self, subcode, param):
@@ -23,6 +33,5 @@ class Interpreter:
 				game.addStory(param[4])
 			else:
 				print "failed"
-			# Maybe include possibility for params as well? In case of error message?
-			return response # Maybe should be moved left one indent, so everything returns a response code?
+			return [response] # Maybe should be moved left one indent, so everything returns a response code?
 

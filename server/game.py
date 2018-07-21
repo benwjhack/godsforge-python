@@ -70,6 +70,7 @@ class Game:
 			response = player.interpret(order)
 			formattedString = "The order %s has produced result code %s" %(str(order), response)
 			self.sendGameMessage(player.UID, formattedString)
+		self.orders = []
 	
 	def startGame(self):
 		print "\n----------------------------STARTING GAME----------------------------\n"

@@ -85,7 +85,7 @@ while 1:
 		else:
 			print "Failed?"
 	elif "messages" in command:
-		sendMessage(51)
+		sendMessage(21, 4)
 		print "\n".join(message.get()["param"])
 	elif "message" in command:
 		to = raw_input("Enter the UID of the entity you want to message:")

@@ -3,6 +3,7 @@ import map
 import interpreter
 
 LAND_COST = 1
+GENERATOR_COST = 4
 
 class Player:
 	
@@ -44,13 +45,24 @@ class Player:
 	def getCurrentDP(self):
 		return self.currentDP.values()
 	
+	def __spend__(self, dpType, amount):
+		if self.currentDP[dpType] < amount:
+			return 1
+		self.currentDP[dpType] -= amount
+		return 0
+	
 	def createLand(self, dpType, x, y, description):
 		if sum([entity.type == "Land" for entity in self.game.map.getTile(x,y).children]) > 0: # If the tile already has a land
 			return 1
-		if self.currentDP[dpType] < LAND_COST:
+		if self.__spend__(dpType, LAND_COST):
 			return 1
-		self.currentDP[dpType] -= LAND_COST
 		map.Land(self.game.map, self, self.game.map.getTile(x,y), LAND_COST, [], description)
+		return 0
+	
+	def createGenerator(self, dpType, x, y, description):
+		if self.__spend__(dpType, GENERATOR_COST):
+			return 1
+		map.Generator(self.game.map, self, self.game.map.getTile(x, y), GENERATOR_COST, [], description)
 		return 0
 	
 	def addOrder(self, order):

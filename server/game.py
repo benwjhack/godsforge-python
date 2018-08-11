@@ -1,5 +1,7 @@
 from map import Map
 from player import Player
+import loader
+import time
 
 class Game:
 	
@@ -47,7 +49,8 @@ class Game:
 		self.getEntity(receiverUID).message(message)
 	
 	def addStory(self, line):
-		if not line in self.story:
+		if not line in self.story: # SO that multiple things being created can just have the same story, which is only added once- duplication of story should never be done deliberately.
+			line = "[%s] %s" % (time.ctime(), line) # Add time stamp to beginning
 			self.story += line + "\n"
 	
 	def vote(self, player, value):
@@ -68,9 +71,10 @@ class Game:
 		for order in self.orders:
 			player, order = order
 			response = player.interpret(order)
-			formattedString = "The order %s has produced result code %s" %(str(order), response)
+			formattedString = "The order %s has produced result code %s" % (str(order), response)
 			self.sendGameMessage(player.UID, formattedString)
 		self.orders = []
+		loader.save(self)
 	
 	def startGame(self):
 		print "\n----------------------------STARTING GAME----------------------------\n"

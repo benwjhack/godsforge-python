@@ -34,4 +34,12 @@ class Interpreter:
 			else:
 				print "failed"
 			return [response] # Maybe should be moved left one indent, so everything returns a response code?
+		if subcode == 1: # Generator
+			print str(player), "creating generator with", param
+			response = player.createGenerator(param[0], int(param[1]), int(param[2]), param[3])
+			if response == 0:
+				game.addStory(param[4])
+			else:
+				print "failed"
+			return [response]
 

@@ -35,7 +35,8 @@
 
 60 - create entity
 	0 - land
-	1 - oscar
+	1 - generator
+	100 - oscar
 
 
 70 - contains parametres [code, subcode]+param to be stored as an order; only block 40 to 60 are valid as codes

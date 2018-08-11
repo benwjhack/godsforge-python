@@ -5,8 +5,8 @@ class Map:
 	
 	def __init__(self, game):
 		self.game = game
-		self.IDGenerator = util.id.getNumGenerator()
 		self.tiles = []
+		self.IDcounter = 0
 	
 	def initTiles(self, minX, maxX, minY, maxY):
 		self.minX = minX
@@ -19,7 +19,9 @@ class Map:
 				self.tiles.append(tile)
 	
 	def generateID(self):
-		return next(self.IDGenerator)
+		temp = self.IDcounter
+		self.IDcounter += 1
+		return temp
 	
 	def getTile(self, x, y):
 		if x < self.minX or x > self.maxX or y < self.minY or y > self.maxX:
@@ -80,6 +82,8 @@ class Land(Entity):
 	def __init__(self, map, owner, parent, basedp, modifiers, description):
 		super(Land, self).__init__(self.__class__.__name__, map, owner, parent, basedp, modifiers, description)
 	
-	#def __str__(self):
-	#	return super(Land, self).__str__()
 
+class Generator(Entity):
+	
+	def __init__(self, map, owner, parent, basedp, modifiers, description):
+		super(Generator, self).__init__(self.__class__.__name__, map, owner, parent, basedp, modifiers, description)

@@ -1,4 +1,10 @@
 #! /bin/bash
+# Generate the build files, and build them in the build directory
+# Requires .temp not to be a directory in use already
+
+# Generate the requirement files
+./generateRequirements.bash
+
 
 # rm does not follow symlinks, just to reassure anyone who sees this.
 
@@ -17,3 +23,7 @@ zip -r ../build/client.zip client --exclude **/*.pyc
 cd ..
 
 rm -r .temp
+
+# Remove the requirements files
+rm server/requirements.txt
+rm client/requirements.txt

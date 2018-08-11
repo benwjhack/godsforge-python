@@ -145,6 +145,16 @@ while 1:
 			description = raw_input("Description (to be added in land description: ")
 			story = raw_input("Summary (to be added to list of events): ")
 			sendMessage(60, 0, [dpType, x, y, description, story])
+		if "generator" in category:
+			dpType = raw_input("Enter the type of dp you would like to spend: ").lower()
+			if not dpType in ["generic", domain, subdomain1, subdomain2]:
+				print "invalid domain type, try again"
+				continue
+			x = raw_input("x: ")
+			y = raw_input("y: ")
+			description = raw_input("Description (to be added in land description: ")
+			story = raw_input("Summary (to be added to list of events): ")
+			sendMessage(60, 1, [dpType, x, y, description, story])
 		response = message.get()
 		if response["code"] == 0:
 			print "Success!"

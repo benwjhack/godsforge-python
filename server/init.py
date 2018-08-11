@@ -1,21 +1,20 @@
 
 from util.sockets import ServerSocket
 from util.message import Message
-import threading
 from handler import handle
-import os
 from game import Game
-
-SAVEFILE = "game.save"
+import loader
+import threading
 
 print "Checking for savefile..."
 
 game = None
 
-if os.path.isfile(SAVEFILE):
-	# Do some loading stuff
-	pass
+if loader.isSaveFile():
+	print "Loading file.."
+	game = loader.load()
 else:
+	print "Creating new game..."
 	game = Game()
 	game.initGame()
 

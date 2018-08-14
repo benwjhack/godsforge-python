@@ -14,6 +14,8 @@
 	4 - started
 	5 - single tile
 	6 - story
+	7 - list of things by map ID
+	8 - thing by map ID
 21 - player info (self)
 	0 - dp generation
 	1 - domain names

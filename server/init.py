@@ -11,8 +11,9 @@ print "Checking for savefile..."
 game = None
 
 if loader.isSaveFile():
-	print "Loading file.."
+	print "Loading file..."
 	game = loader.load()
+	game.onLoad()
 else:
 	print "Creating new game..."
 	game = Game()

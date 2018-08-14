@@ -59,10 +59,10 @@ class Player:
 		map.Land(self.game.map, self, self.game.map.getTile(x,y), LAND_COST, [], description)
 		return 0
 	
-	def createGenerator(self, dpType, x, y, description):
+	def createGenerator(self, dpType, parent, description):
 		if self.__spend__(dpType, GENERATOR_COST):
 			return 1
-		map.Generator(self.game.map, self, self.game.map.getTile(x, y), GENERATOR_COST, [], description)
+		map.Generator(self.game.map, self, parent, GENERATOR_COST, [], description)
 		return 0
 	
 	def addOrder(self, order):

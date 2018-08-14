@@ -25,10 +25,17 @@ class Interpreter:
 		
 		game = self.game
 		player = self.player
+		parentType = param[1] == "True"
+		if parentType:
+			x, y = map(int, param[2].split("/"))
+		else:
+			id = int(param[2])
 		
 		if subcode == 0: # Land
 			print str(player), "creating land with", param
-			response = player.createLand(param[0], int(param[1]), int(param[2]), param[3])
+			if not parentType:
+				return [3, 0, ["Land must be attatched to a tile"]]
+			response = player.createLand(param[0], x, y, param[3])
 			if response == 0:
 				game.addStory(param[4])
 			else:
@@ -36,7 +43,11 @@ class Interpreter:
 			return [response] # Maybe should be moved left one indent, so everything returns a response code?
 		if subcode == 1: # Generator
 			print str(player), "creating generator with", param
-			response = player.createGenerator(param[0], int(param[1]), int(param[2]), param[3])
+			if parentType:
+				parent = self.game.map.getTile(x, y)
+			else:
+				parent = self.game.map.getEntity(id)
+			response = player.createGenerator(param[0], parent, param[3])
 			if response == 0:
 				game.addStory(param[4])
 			else:

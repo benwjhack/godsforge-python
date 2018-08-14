@@ -18,6 +18,9 @@ class Game:
 		self.orders = []
 		self.masterPlayer = None
 	
+	def onLoad(self):
+		Message.game = self
+	
 	def initGame(self):
 		self.map.initTiles(-4, 4, -4, 4)
 		
@@ -97,7 +100,7 @@ class Game:
 		if len(self.players) == self.maxPlayers:
 			self.closed = True
 	
-	def generateUID(self):
+	def generateUID(self): # TODO: change so that it takes the object being assigned a UID, then appends it to a list, so it doesn't need to use a class property
 		temp = self.UIDcounter
 		self.UIDcounter += 1
 		return temp

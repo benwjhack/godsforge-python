@@ -1,12 +1,11 @@
 
-import util.id
-
 class Map:
 	
 	def __init__(self, game):
 		self.game = game
 		self.tiles = []
 		self.IDcounter = 0
+		self.entities = []
 	
 	def initTiles(self, minX, maxX, minY, maxY):
 		self.minX = minX
@@ -18,7 +17,8 @@ class Map:
 				tile = Tile(self, x, y)
 				self.tiles.append(tile)
 	
-	def generateID(self):
+	def generateID(self, thing):
+		self.entities.append(thing)
 		temp = self.IDcounter
 		self.IDcounter += 1
 		return temp
@@ -30,6 +30,12 @@ class Map:
 			if tile.location[0] == x and tile.location[1] == y:
 				return tile
 		return 1
+	
+	def getEntity(self, id):
+		for entity in self.entities:
+			if entity.id == id:
+				return entity
+		return None
 
 class Tile:
 	
@@ -37,6 +43,8 @@ class Tile:
 		self.map = map
 		self.children = []
 		self.location = (x,y)
+		self.uid = map.game.generateUID()
+		self.id = map.generateID(self)
 	
 	def adjacentTiles(self):
 		locations = []
@@ -49,13 +57,16 @@ class Tile:
 	
 	def __str__(self):
 		return ("%s:\n" % (self.location,)) + '\n'.join( [str(child) for child in self.children] )
+	
+	def _getName(self):
+		return str(self.location)
 
 class Entity(object):
 	
 	def __init__(self, type, map, owner, parent, basedp, modifiers, description):
 		self.map = map
 		self.uid = map.game.generateUID()
-		self.id = map.generateID()
+		self.id = map.generateID(self)
 		self.children = []
 		self.parent = parent
 		self.parent.children.append(self)
@@ -70,17 +81,22 @@ class Entity(object):
 		
 		self.effectivedp = basedp
 		
-		self.type = type #self.__class__.__bases__[0].__name__
+		self.type = type
 		
 		self.description = description
+		self.name = self.type+str(self.id)
+	
+	def _getName(self):
+		return self.name
 	
 	def __str__(self):
-		return "%s: %sdp %s; %s" % (self.type, self.effectivedp, self.location, self.description)
+		return "%s %s (%s): %sdp %s; %s" % (self.type, self.name, self.id, self.effectivedp, self.parent._getName(), self.description)
 
 class Land(Entity):
 	
 	def __init__(self, map, owner, parent, basedp, modifiers, description):
 		super(Land, self).__init__(self.__class__.__name__, map, owner, parent, basedp, modifiers, description)
+		self.name = "Land (%s, %s)" % parent.location
 	
 
 class Generator(Entity):

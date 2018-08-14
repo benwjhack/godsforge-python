@@ -6,5 +6,5 @@ if [ -f serverPID.txt ]; then
 fi
 
 echo "Starting server"...
-stdbuf -o0 python init.py &> logs/log.txt &
+stdbuf -o0 python init.py &>> logs/log.txt &
 echo "$!" > serverPID.txt

@@ -77,6 +77,9 @@ class Game:
 			formattedString = "The order %s has produced result code %s" % (str(order), response)
 			self.sendGameMessage(player.UID, formattedString)
 		self.orders = []
+		self.save()
+	
+	def save(self):
 		loader.save(self)
 	
 	def startGame(self):

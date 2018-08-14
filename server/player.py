@@ -39,11 +39,10 @@ class Player:
 		self.orders = []
 	
 	def getDPGeneration(self):
-		# Possible bug- this assumes order generic, domain, subdomain1, subdomain2 is preserved (same for getCurrentDP() )
-		return sum(self.baseDP.values()) # TODO: add 'controlled' stuffs' DP
+		return sum([self.currentDP[name] for name in ["generic"]+self.domainNames]) # TODO: add 'controlled' stuffs' DP
 	
 	def getCurrentDP(self):
-		return self.currentDP.values()
+		return [self.currentDP[name] for name in ["generic"]+self.domainNames]
 	
 	def __spend__(self, dpType, amount):
 		if self.currentDP[dpType] < amount:

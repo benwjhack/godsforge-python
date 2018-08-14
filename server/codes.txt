@@ -48,3 +48,4 @@
 	0 - start game
 	1 - advance cycle
 	2 - evaluate arbitrary code
+	3 - save the game

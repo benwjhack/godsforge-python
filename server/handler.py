@@ -87,6 +87,8 @@ def handle(sock, game):
 				result = eval(''.join(param))
 				message.send(0, 0, [result])
 				continue
+			if subcode == 3:
+				game.save()
 			message.send(0)
 	
 	# Do cleanup

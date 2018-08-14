@@ -90,7 +90,13 @@ class Entity(object):
 		return self.name
 	
 	def __str__(self):
-		return "%s %s (%s): %sdp %s; %s" % (self.type, self.name, self.id, self.effectivedp, self.parent._getName(), self.description)
+		return self._indent_print(0)
+	
+	def _indent_print(self, indent):
+		string = ("\t"*indent)+"%s %s (%s): %sdp %s; %s" % (self.type, self.name, self.id, self.effectivedp, self.parent._getName(), self.description)
+		for child in self.children:
+			string += child._indent_print(indent+1)
+		return string
 
 class Land(Entity):
 	

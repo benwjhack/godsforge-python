@@ -14,6 +14,8 @@ Maybe a reply mechanic should be added- which would also use the aforementioned 
 
 Probably cleaner to create entirely sepearate pieces of code for dealing with the master player, or maybe functions for transforming player code on it?
 
+Players should be able to try to create things with the same map ID as existent things- then a new ID, and the previous ID, get assigned randomly to the old thing and the new thing.
+
 TODO
 - Any github things.
 - Add a more secure authentication system.

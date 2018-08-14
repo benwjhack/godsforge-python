@@ -29,7 +29,7 @@ else:
 	secret = raw_input("Enter a secret (like a password, but no security):")
 	domain = raw_input("Enter a domain:")
 	subdomain1 = raw_input("Enter a subdomain:")
-	subdomain2 = raw_input("Enter a subdomain:")
+	subdomain2 = raw_input("Enter a second subdomain:")
 	message.send(11, 0, [secret, domain, subdomain1, subdomain2])
 	response = message.get()
 	if response["code"] == 3:
@@ -135,26 +135,24 @@ while 1:
 			print "Game has not started: stop"
 			continue
 		category = raw_input("Input what you would like to create: ").lower()
-		if "land" in category:
-			dpType = raw_input("Enter the type of dp you would like to spend: ").lower()
-			if not dpType in ["generic", domain, subdomain1, subdomain2]:
-				print "invalid domain type, try again"
-				continue
-			x = raw_input("x: ")
-			y = raw_input("y: ")
-			description = raw_input("Description (to be added in land description: ")
-			story = raw_input("Summary (to be added to list of events): ")
-			sendMessage(60, 0, [dpType, x, y, description, story])
-		if "generator" in category:
-			dpType = raw_input("Enter the type of dp you would like to spend: ").lower()
-			if not dpType in ["generic", domain, subdomain1, subdomain2]:
-				print "invalid domain type, try again"
-				continue
-			x = raw_input("x: ")
-			y = raw_input("y: ")
-			description = raw_input("Description (to be added in land description: ")
-			story = raw_input("Summary (to be added to list of events): ")
-			sendMessage(60, 1, [dpType, x, y, description, story])
+		categories = ["land", "generator"]
+		category = categories.index(category)
+		dpType = raw_input("Enter the type of dp you would like to spend: ").lower()
+		if not dpType in ["generic", domain, subdomain1, subdomain2]:
+			print "invalid domain type, try again"
+			continue
+		parentType = raw_input("Attatch to (t)ile or (e)ntity:")[0] == "t"
+		parentMessage = ""
+		if parentType:
+			x = int(raw_input("x: "))
+			y = int(raw_input("y: "))
+			parentMessage = str(x)+"/"+str(y)
+		else:
+			id = int(raw_input("id: "))
+			parentMessage = id
+		description = raw_input("Description (to be added in land description: ")
+		story = raw_input("Summary (to be added to list of events): ")
+		sendMessage(60, category, [dpType, parentType, parentMessage, description, story])
 		response = message.get()
 		if response["code"] == 0:
 			print "Success!"

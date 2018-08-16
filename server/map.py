@@ -1,3 +1,4 @@
+import player
 
 class Map:
 	
@@ -43,7 +44,7 @@ class Tile:
 		self.map = map
 		self.children = []
 		self.location = (x,y)
-		self.uid = map.game.generateUID()
+		self.uid = map.game.generateUID(self)
 		self.id = map.generateID(self)
 	
 	def adjacentTiles(self):
@@ -60,12 +61,15 @@ class Tile:
 	
 	def _getName(self):
 		return str(self.location)
+	
+	def initCycle(self):
+		pass
 
 class Entity(object):
 	
 	def __init__(self, type, map, owner, parent, basedp, modifiers, description):
 		self.map = map
-		self.uid = map.game.generateUID()
+		self.uid = map.game.generateUID(self)
 		self.id = map.generateID(self)
 		self.children = []
 		self.parent = parent
@@ -97,6 +101,9 @@ class Entity(object):
 		for child in self.children:
 			string += child._indent_print(indent+1)
 		return string
+	
+	def initCycle(self):
+		pass
 
 class Land(Entity):
 	
@@ -107,5 +114,9 @@ class Land(Entity):
 
 class Generator(Entity):
 	
-	def __init__(self, map, owner, parent, basedp, modifiers, description):
+	def __init__(self, map, owner, parent, basedp, modifiers, description, dpType):
 		super(Generator, self).__init__(self.__class__.__name__, map, owner, parent, basedp, modifiers, description)
+		self.dpType = dpType
+	
+	def initCycle(self):
+		self.owner.currentDP[self.dpType] += self.effectivedp / player.GENERATOR_COST

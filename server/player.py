@@ -2,15 +2,15 @@
 import map
 import interpreter
 
-LAND_COST = 1
-GENERATOR_COST = 4
+LAND_COST = 1.0
+GENERATOR_COST = 4.0
 
 class Player:
 	
 	def __init__(self, game, uid, secret, domain, subdomain1, subdomain2, uber=False):
 		self.game = game
 		if uid == None:
-			uid = game.generateUID()
+			uid = game.generateUID(self)
 		self.secret = secret
 		self.UID = uid
 		self.name = "Anonymous"
@@ -24,6 +24,7 @@ class Player:
 			game.addPlayer(self)
 		else:
 			self.baseDP = self.currentDP = {'generic': float("inf")}
+			self.domainNames = ["generic", "generic", "generic"]
 			self.name = "Game Master"
 		
 		self.orders = []
@@ -63,7 +64,7 @@ class Player:
 		spendAttempt = self.__spend__(dpType, GENERATOR_COST)
 		if spendAttempt:
 			return spendAttempt
-		map.Generator(self.game.map, self, parent, GENERATOR_COST, [], description)
+		map.Generator(self.game.map, self, parent, GENERATOR_COST, [], description, dpType)
 		return 0
 	
 	def addOrder(self, order):

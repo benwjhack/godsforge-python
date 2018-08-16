@@ -17,6 +17,7 @@ class Game:
 		self.story = ""
 		self.orders = []
 		self.masterPlayer = None
+		self.entities = []
 	
 	def onLoad(self):
 		Message.game = self
@@ -70,6 +71,8 @@ class Game:
 		self.resetVotes()
 		for player in self.players:
 			player.initCycle()
+		for entity in self.map.entities:
+			entity.initCycle()
 		# Not sure if order will matter- since player.initCycle has already been called, players no longer remember their orders, even if the game does
 		for order in self.orders:
 			player, order = order
@@ -103,23 +106,17 @@ class Game:
 		if len(self.players) == self.maxPlayers:
 			self.closed = True
 	
-	def generateUID(self): # TODO: change so that it takes the object being assigned a UID, then appends it to a list, so it doesn't need to use a class property
+	def generateUID(self, thing): # TODO: change so that it takes the object being assigned a UID, then appends it to a list, so it doesn't need to use a class property
 		temp = self.UIDcounter
 		self.UIDcounter += 1
+		self.entities.append(thing)
 		return temp
-	
-	@property
-	def entities(self):
-		return self.players + [self.masterPlayer]
 	
 	def getEntity(self, UID):
 		for entity in self.entities:
 			if entity.UID == UID:
 				return entity
 		return None
-	
-	def save(self):
-		pass
 	
 	def load(self):
 		pass

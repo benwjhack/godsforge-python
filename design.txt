@@ -16,7 +16,9 @@ Probably cleaner to create entirely sepearate pieces of code for dealing with th
 
 Players should be able to try to create things with the same map ID as existent things- then a new ID, and the previous ID, get assigned randomly to the old thing and the new thing.
 
+Some pretty wacky design can probably be attempted with the connections of tiles- but visual display of that would be weird. Perhaps people get an amount of space they can create, and limited amount of connections? Or maybe they can spend dp to create connections in a 2D grid?
+
 TODO
 - Any github things.
 - Add a more secure authentication system.
-- Loading/saving (probably with pickle)
+- Think about adding some way to combine dp when spending it - maybe each entity has a base dp required to create it, and any initial spending costs continue to apply until it receives orders (so dp is invested buring a 'birth' phase)

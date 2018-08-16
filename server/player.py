@@ -46,21 +46,23 @@ class Player:
 	
 	def __spend__(self, dpType, amount):
 		if self.currentDP[dpType] < amount:
-			return 1
+			return [3, 0, ["Not enough DP - you need %s" % amount]]
 		self.currentDP[dpType] -= amount
 		return 0
 	
 	def createLand(self, dpType, x, y, description):
 		if sum([entity.type == "Land" for entity in self.game.map.getTile(x,y).children]) > 0: # If the tile already has a land
-			return 1
-		if self.__spend__(dpType, LAND_COST):
-			return 1
+			return [3, 0, ["There is already Land on this tile"]]
+		spendAttempt = self.__spend__(dpType, LAND_COST)
+		if spendAttempt:
+			return spendAttempt
 		map.Land(self.game.map, self, self.game.map.getTile(x,y), LAND_COST, [], description)
 		return 0
 	
 	def createGenerator(self, dpType, parent, description):
-		if self.__spend__(dpType, GENERATOR_COST):
-			return 1
+		spendAttempt = self.__spend__(dpType, GENERATOR_COST)
+		if spendAttempt:
+			return spendAttempt
 		map.Generator(self.game.map, self, parent, GENERATOR_COST, [], description)
 		return 0
 	

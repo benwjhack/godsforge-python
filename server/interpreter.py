@@ -52,5 +52,8 @@ class Interpreter:
 				game.addStory(param[4])
 			else:
 				print "failed"
-			return [response]
+			if type(response) == list:
+				return response
+			else:
+				return [response]
 

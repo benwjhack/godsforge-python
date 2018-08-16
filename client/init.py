@@ -56,6 +56,14 @@ def gameStarted():
 	sendMessage(20, 4)
 	return message.get()["param"][0] == "True"
 
+def handleError(message):
+	if message["code"] == 1:
+		print "Unknown error..."
+	elif message["code"] == 3:
+		print message["param"][0]
+	else:
+		print "Unknown error code?..."
+
 while 1:
 	order = raw_input().split(" ")
 	command = order[0].lower()
@@ -157,7 +165,7 @@ while 1:
 		if response["code"] == 0:
 			print "Success!"
 		else:
-			print "Failure..."
+			handleError(response)
 	elif "delay" in command:
 		toggleDelay = not toggleDelay
 	else:

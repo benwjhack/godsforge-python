@@ -44,7 +44,6 @@ class Tile:
 		self.map = map
 		self.children = []
 		self.location = (x,y)
-		self.uid = map.game.generateUID(self)
 		self.id = map.generateID(self)
 	
 	def adjacentTiles(self):
@@ -64,12 +63,15 @@ class Tile:
 	
 	def initCycle(self):
 		pass
+	
+	def message(self, string):
+		pass
 
 class Entity(object):
 	
 	def __init__(self, type, map, owner, parent, basedp, modifiers, description):
 		self.map = map
-		self.uid = map.game.generateUID(self)
+		self.UID = map.game.generateUID(self)
 		self.id = map.generateID(self)
 		self.children = []
 		self.parent = parent

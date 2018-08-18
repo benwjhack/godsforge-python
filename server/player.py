@@ -23,6 +23,7 @@ class Player:
 		if not uber:
 			game.addPlayer(self)
 		else:
+			game.players.append(self)
 			self.baseDP = self.currentDP = {'generic': float("inf")}
 			self.domainNames = ["generic", "generic", "generic"]
 			self.name = "Game Master"

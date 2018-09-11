@@ -60,12 +60,12 @@ class Game:
 	def vote(self, player, value):
 		if not self.started: return
 		
-		self.votes[player.UID] = value
+		self.votes[player] = value
 		if sum(self.votes.values()) >= len(self.players):
 			self.advanceCycle()
 	
 	def resetVotes(self):
-		self.votes = {player:False for player in [p.UID for p in self.players]}
+		self.votes = {player:False for player in self.players if not player.uber}
 	
 	def initCycle(self):
 		self.resetVotes()

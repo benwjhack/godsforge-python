@@ -27,6 +27,7 @@ class Player:
 			self.baseDP = self.currentDP = {'generic': float("inf")}
 			self.domainNames = ["generic", "generic", "generic"]
 			self.name = "Game Master"
+		self.uber = uber
 		
 		self.orders = []
 		

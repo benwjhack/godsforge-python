@@ -22,7 +22,10 @@ else:
 
 print "Starting server..."
 
-socket = ServerSocket('localhost', 5050)
+SERVER = "localhost"
+PORT = 5050
+
+socket = ServerSocket(SERVER, PORT)
 
 try:
 	while 1:

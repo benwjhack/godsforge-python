@@ -37,6 +37,12 @@ class Game:
 				return player
 		return None
 	
+	def getPlayerByUID(self, UID):
+		for player in self.players:
+			if player.UID == UID:
+				return player
+		return None
+	
 	def addOrder(self, player, order):
 		self.orders.append([player, order])
 		player.addOrder(order)

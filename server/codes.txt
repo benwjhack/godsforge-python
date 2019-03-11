@@ -49,3 +49,4 @@
 	1 - advance cycle
 	2 - evaluate arbitrary code
 	3 - save the game
+	4 - reset player password

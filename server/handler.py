@@ -2,6 +2,8 @@
 import util.message
 from player import Player
 
+TEST = True
+
 def handle(sock, game):
 	
 	print "Starting player thread handle..."
@@ -78,7 +80,10 @@ def handle(sock, game):
 			message.send(0)
 		
 		if code == 100:
-			#continue
+			if not (selectedPlayer.uber or TEST):
+				message.send(3, 0, ["Insufficient permissions (non uber player cannot execute 100 block)"])
+				continue
+			
 			if subcode == 0:
 				game.startGame()
 			if subcode == 1:
@@ -89,6 +94,14 @@ def handle(sock, game):
 				continue
 			if subcode == 3:
 				game.save()
+			if subcode == 4:
+				player = game.getPlayerByUID(int(param[0]))
+				if not player:
+					message.send(3, 0, ["No such player"])
+				else:
+					player.secret = param[1]
+					print "player", player.UID, "is now secret", player.__dict__
+					message.send(0)
 			message.send(0)
 	
 	# Do cleanup

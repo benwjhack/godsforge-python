@@ -4,6 +4,8 @@ import interpreter
 
 LAND_COST = 1.0
 GENERATOR_COST = 4.0
+RACE_COST = 0.0
+CREATURE_COST = 1.0
 
 class Player:
 	
@@ -13,6 +15,7 @@ class Player:
 			uid = game.generateUID(self)
 		self.secret = secret
 		self.UID = uid
+		self.id = game.map.generateID(self)
 		self.name = "Anonymous"
 		self.messages = []
 		self.baseDP = {'generic': 4, domain: 4, subdomain1: 1, subdomain2: 1}
@@ -23,6 +26,8 @@ class Player:
 		if not uber:
 			game.addPlayer(self)
 		else:
+			self.children = [] # List so that uber player can be parent of races...
+			self.location = "Not"
 			game.players.append(self)
 			self.baseDP = self.currentDP = {'generic': float("inf")}
 			self.domainNames = ["generic", "generic", "generic"]
@@ -48,7 +53,7 @@ class Player:
 		return [self.currentDP[name] for name in ["generic"]+self.domainNames]
 	
 	def __spend__(self, dpType, amount):
-		if self.currentDP[dpType] < amount:
+		if not dpType in self.currentDP or self.currentDP[dpType] < amount:
 			return [3, 0, ["Not enough DP - you need %s" % amount]]
 		self.currentDP[dpType] -= amount
 		return 0
@@ -69,6 +74,20 @@ class Player:
 		map.Generator(self.game.map, self, parent, GENERATOR_COST, [], description, dpType)
 		return 0
 	
+	def createRace(self, dpType, description):
+		spendAttempt = self.__spend__(dpType, RACE_COST)
+		if spendAttempt:
+			return spendAttempt
+		map.Race(self.game.map, self, self.game.masterPlayer, RACE_COST, [], description)
+		return 0
+	
+	def createCreature(self, dpType, parent, description):
+		spendAttempt = self.__spend__(dpType, RACE_COST)
+		if spendAttempt:
+			return spendAttempt
+		map.Creature(self.game.map, self, parent, CREATURE_COST, [], description)
+		return 0
+	
 	def addOrder(self, order):
 		self.orders.append(order)
 	
@@ -80,4 +99,7 @@ class Player:
 	
 	def __str__(self):
 		# Maybe players shouldn't be uniquely identifiable (idk yet if UID's can be re-assigned once out of use)
-		return "%s (%s)" % (self.name, self.UID)
+		return "%s (%s) (%s)" % (self.name, self.UID, self.id)
+	
+	def __order__(self, *args):
+		return [3, 0, ["This is a player..."]]

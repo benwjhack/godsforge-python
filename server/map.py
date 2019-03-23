@@ -71,6 +71,7 @@ class Entity(object):
 	
 	def __init__(self, type, map, owner, parent, basedp, modifiers, description):
 		self.map = map
+		self.game = map.game
 		self.UID = map.game.generateUID(self)
 		self.id = map.generateID(self)
 		self.children = []
@@ -91,6 +92,29 @@ class Entity(object):
 		
 		self.description = description
 		self.name = self.type+str(self.id)
+		
+		self.currentDP = {}
+	
+	def __order__(self, orderer, subcode, params):
+		if self.owner != orderer:
+			return [3, 0, ["You don't own this entity"]] # Eventually, this needs to be more subtle
+		if subcode == 0: # Transfer DP
+			dpType = params[0]
+			amount = int(params[1])
+			if not dpType in self.currentDP or self.currentDP[dpType] < amount:
+				return [3, 0, ["Not enough DP to transfer"]]
+			entity = self.map.getEntity(int(params[2]))
+			if not entity:
+				return [3, 0, ["No such entity to transfer DP to"]]
+			self.currentDP[dpType] -= amount
+			entity.currentDP[dpType] += amount
+			return [0]
+		if subcode == 1: # Tell current DP
+			self.game.sendMessage(self, self.owner.UID, "I have the following DP:" + str(self.currentDP))
+			return [0]
+		if subcode == 2: # Change name
+			self.name = params[0]
+			return [0]
 	
 	def _getName(self):
 		return self.name
@@ -106,6 +130,9 @@ class Entity(object):
 	
 	def initCycle(self):
 		pass
+	
+	def message(self, message):
+		self.owner.message(message)
 
 class Land(Entity):
 	
@@ -121,4 +148,22 @@ class Generator(Entity):
 		self.dpType = dpType
 	
 	def initCycle(self):
-		self.owner.currentDP[self.dpType] += self.effectivedp / player.GENERATOR_COST
+		self.currentDP[self.dpType] = self.currentDP.setdefault(self.dpType, 0) + self.effectivedp / player.GENERATOR_COST
+
+class Race(Entity):
+	
+	def __init__(self, map, owner, parent, basedp, modifiers, description):
+		super(Race, self).__init__(self.__class__.__name__, map, owner, parent, basedp, modifiers, description)
+		map.game.races.append(self)
+		self.trouble = 0
+	
+	def _indent_print(self, indent):
+		string = "\n"+("\t"*indent)+"%s %s (%s); %s" % (self.type, self.name, self.id, self.description)
+		for child in self.children:
+			string += child._indent_print(indent+1)
+		return string
+
+class Creature(Entity):
+	
+	def __init__(self, map, owner, parent, basedp, modifiers, description):
+		super(Creature, self).__init__(self.__class__.__name__, map, owner, parent, basedp, modifiers, description)

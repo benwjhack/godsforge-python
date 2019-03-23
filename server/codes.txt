@@ -16,6 +16,7 @@
 	6 - story
 	7 - list of things by map ID
 	8 - thing by map ID
+	9 - races
 21 - player info (self)
 	0 - dp generation
 	1 - domain names
@@ -33,11 +34,18 @@
 50 - message entity
 	0 - no mask
 	1 - mask
+51 - unused
 52 - remove message
+53 - order entity
+	0 - transfer DP
+	1 - list DP
+	2 - change name
 
 60 - create entity
 	0 - land
 	1 - generator
+	2 - race
+	3 - creature
 	100 - oscar
 
 

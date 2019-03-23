@@ -2,7 +2,7 @@
 
 cd server
 ./startServer.sh
-sleep 0.5
+sleep 0.5 # To allow server time to spin up
 cd ../client
 python init.py
 cd ../server

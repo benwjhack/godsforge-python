@@ -5,7 +5,7 @@ from util.message import Message
 sock = ClientSocket('localhost', 5050)
 message = Message(sock)
 
-loginB = "l" in raw_input("(L)ogin or (R)egister?").lower()
+loginB = "l" in raw_input("(L)ogin or (R)egister?: ").lower()
 
 domain = None
 subdomain1 = None
@@ -13,7 +13,7 @@ subdomain2 = None
 
 if loginB:
 	# Do login stuff
-	secret = raw_input("Enter your secret:")
+	secret = raw_input("Enter your secret: ")
 	message.send(10, 0, [secret])
 	response = message.get()
 	if response["code"] == 2:
@@ -26,10 +26,10 @@ if loginB:
 	subdomain1 = response["param"][1]
 	subdomain2 = response["param"][2]
 else:
-	secret = raw_input("Enter a secret (like a password, but no security):")
-	domain = raw_input("Enter a domain:")
-	subdomain1 = raw_input("Enter a subdomain:")
-	subdomain2 = raw_input("Enter a second subdomain:")
+	secret = raw_input("Enter a secret (like a password, but no security): ")
+	domain = raw_input("Enter a domain: ")
+	subdomain1 = raw_input("Enter a subdomain: ")
+	subdomain2 = raw_input("Enter a second subdomain: ")
 	message.send(11, 0, [secret, domain, subdomain1, subdomain2])
 	response = message.get()
 	if response["code"] == 3:
@@ -64,8 +64,11 @@ def handleError(message):
 	else:
 		print "Unknown error code?..."
 
+def printResponse():
+	print "\n".join(message.get()["param"])
+
 while 1:
-	order = raw_input().split(" ")
+	order = raw_input("> ").split(" ")
 	command = order[0].lower()
 	if "help" in command:
 		print "idk"
@@ -77,7 +80,28 @@ while 1:
 		print "The game has" + (" " if started else " not ") + "started"
 	elif "player" in command:
 		sendMessage(20, 3)
-		print "\n".join(message.get()["param"])
+		printResponse()
+	elif "races" in command:
+		sendMessage(20, 9)
+		printResponse()
+	elif "order" in command:
+		subcodeDict = {"transfer": 0, "listDP": 1, "name": 2}
+		subcode = subcodeDict[raw_input("Enter command for entity (%s): " % subcodeDict)]
+		entityID = raw_input("Enter UID of entity to command: ")
+		if subcode == 0:
+			dpType = raw_input("Enter DP type to transfer: ")
+			amount = raw_input("Enter amount: ")
+			uid = raw_input("Enter UID to transfer to: ")
+			sendMessage(53, subcode, [entityID, dpType, amount, uid])
+		elif subcode == 1:
+			sendMessage(53, subcode, [entityID])
+		elif subcode == 2:
+			name = raw_input("Enter the new name of the entity: ")
+			sendMessage(53, subcode, [entityID, name])
+		else:
+			sendMessage(0, 0, [])
+			print "not valid thingy"
+		printResponse()
 	elif "vote" in command:
 		sendMessage(30, int("yes" in "".join(order)))
 		message.get()
@@ -86,7 +110,7 @@ while 1:
 		sendMessage(int(inp[0]), int(inp[1]), inp[2:])
 		print message.get()
 	elif "name" in command:
-		inp = raw_input("Enter your new name:")
+		inp = raw_input("Enter your new name: ")
 		sendMessage(40, 0, [inp])
 		if message.get()["code"] == 0:
 			print "Successful!"
@@ -94,12 +118,12 @@ while 1:
 			print "Failed?"
 	elif "messages" in command:
 		sendMessage(21, 4)
-		print "\n".join(message.get()["param"])
+		printResponse()
 	elif "message" in command:
-		to = raw_input("Enter the UID of the entity you want to message:")
+		to = raw_input("Enter the UID of the entity you want to message: ")
 		if sum([not c in "0123456" for c in to]):
 			print "Not a valid UID"
-		content = raw_input("Enter the message you want to send:")
+		content = raw_input("Enter the message you want to send: ")
 		sendMessage(50, 0, [to, content])
 		message.get()
 	elif "tiles" in command:
@@ -117,7 +141,7 @@ while 1:
 		sendMessage(20, 5, [x, y])
 		print message.get()["param"][0]
 	elif "currentdp" in command:
-		# Errors occur if a player has the same name for multiple domains- they derserve this.
+		# Errors occur if a player has the same name for multiple domains- they deserve this.
 		if not gameStarted():
 			print "Game not started, cannot check."
 			continue
@@ -142,25 +166,33 @@ while 1:
 		if message.get()["param"][0] == "False":
 			print "Game has not started: stop"
 			continue
-		category = raw_input("Input what you would like to create: ").lower()
-		categories = ["land", "generator"]
+		categories = ["land", "generator", "race", "creature"]
+		category = raw_input("Input what you would like to create (from %s): " % categories).lower()
 		category = categories.index(category)
-		dpType = raw_input("Enter the type of dp you would like to spend: ").lower()
-		if not dpType in ["generic", domain, subdomain1, subdomain2]:
-			print "invalid domain type, try again"
-			continue
-		parentType = raw_input("Attatch to (t)ile or (e)ntity:")[0] == "t"
-		parentMessage = ""
-		if parentType:
-			x = int(raw_input("x: "))
-			y = int(raw_input("y: "))
-			parentMessage = str(x)+"/"+str(y)
-		else:
-			id = int(raw_input("id: "))
-			parentMessage = id
-		description = raw_input("Description (to be added in land description: ")
-		story = raw_input("Summary (to be added to list of events): ")
-		sendMessage(60, category, [dpType, parentType, parentMessage, description, story])
+		if category in [0, 1, 3]:
+			dpType = raw_input("Enter the type of dp you would like to spend: ").lower()
+			if not dpType in ["generic", domain, subdomain1, subdomain2]:
+				print "invalid domain type, try again"
+				continue
+			parentType = raw_input("Attatch to (t)ile or (e)ntity: ")[0] == "t"
+			parentMessage = ""
+			if parentType:
+				x = int(raw_input("x: "))
+				y = int(raw_input("y: "))
+				parentMessage = str(x)+"/"+str(y)
+			else:
+				id = int(raw_input("id: "))
+				parentMessage = id
+			description = raw_input("Description (to be added in land description: ")
+			story = raw_input("Summary (to be added to list of events): ")
+			params = [dpType, parentType, parentMessage, description, story]
+		elif category in [2]:
+			description = raw_input("Description (to be added in land description: ")
+			story = raw_input("Summary (to be added to list of events): ")
+			params = ["generic", "False", "0", description, story]
+		if category in [3]:
+			params.append(raw_input("ID of race to attach creature to: "))
+		sendMessage(60, category, params)
 		response = message.get()
 		if response["code"] == 0:
 			print "Success!"
@@ -168,6 +200,7 @@ while 1:
 			handleError(response)
 	elif "delay" in command:
 		toggleDelay = not toggleDelay
+		print "Now" + (" " if toggleDelay else " not ") + "delaying orders"
 	else:
 		print "Unrecognised command: try again, or try 'help'"
 		continue

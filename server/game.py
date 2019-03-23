@@ -18,6 +18,7 @@ class Game:
 		self.orders = []
 		self.masterPlayer = None
 		self.entities = []
+		self.races = []
 	
 	def onLoad(self):
 		Message.game = self

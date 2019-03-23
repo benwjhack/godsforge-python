@@ -39,6 +39,9 @@ def handle(sock, game):
 		subcode = messageO["subcode"]
 		param = messageO["param"]
 		
+		if code == 0:
+			message.send(0)
+		
 		if code == 1:
 			break
 		
@@ -56,6 +59,12 @@ def handle(sock, game):
 				message.send(0, 0, [str( game.map.getTile( int( param[0] ), int( param[1] ) ))])
 			if subcode == 6:
 				message.send(0, 0, [game.story])
+			if subcode == 7:
+				message.send(0, 0, map(str, game.map.entities))
+			if subcode == 8:
+				message.send(0, 0, [str(game.map.getEntity(int(param[0])))])
+			if subcode == 9:
+				message.send(0, 0, map(str, game.races))
 		
 		if code == 21:
 			if subcode == 0:

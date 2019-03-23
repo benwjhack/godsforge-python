@@ -17,6 +17,9 @@ class Interpreter:
 			if subcode == 0:
 				result = self.game.sendMessage(self.player, int(param[0]), param[1])
 				return [result]
+		if code == 53:
+			entity = self.game.map.getEntity(int(param[0]))
+			return entity.__order__(self.player, subcode, param[1:])
 		
 		if code == 60:
 			return self.create(subcode, param)
@@ -56,4 +59,28 @@ class Interpreter:
 				return response
 			else:
 				return [response]
+		if subcode == 2: # Race
+			print str(player), "creating race with", param
+			response = player.createRace(param[0], param[3]) # Notably, param[2] is empty for consistency
+			if response == 0:
+				game.addStory(param[4])
+			else:
+				print "failed"
+			return [response]
+		if subcode == 3: # Creature
+			print str(player), "creating creature with", param
+			if parentType:
+				parent = self.game.map.getTile(x, y)
+			else:
+				parent = self.game.map.getEntity(id)
+			parentRace = self.game.map.getEntity(id)
+			if parentRace.type != "Race":
+				return [3, 0, ["Parent race needs to be a *race*"]]
+			response = player.createCreature(param[0], parent, parentRace, param[3])
+			if response == 0:
+				game.addStory(param[4])
+			else:
+				print "failed"
+			return [response]
+
 

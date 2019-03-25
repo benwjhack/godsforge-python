@@ -71,10 +71,14 @@ def handle(sock, game):
 				message.send(0, 0, [selectedPlayer.baseDP["generic"], selectedPlayer.baseDP[selectedPlayer.domainNames[0]], selectedPlayer.baseDP[selectedPlayer.domainNames[1]], selectedPlayer.baseDP[selectedPlayer.domainNames[2]]])
 			if subcode == 1:
 				message.send(0, 0, selectedPlayer.domainNames)
+			if subcode == 2:
+				message.send(0, 0, map(str, selectedPlayer.getOwnedArray()))
 			if subcode == 3:
 				message.send(0, 0, selectedPlayer.getCurrentDP())
 			if subcode == 4:
 				message.send(0, 0, [str(message1) for message1 in selectedPlayer.messages])
+			if subcode == 5:
+				message.send(0, 0, [sum([thing.getDPGeneration() for thing in selectedPlayer.getOwnedArray()])])
 		
 		if code == 30:
 			game.vote(selectedPlayer, subcode)
@@ -98,7 +102,7 @@ def handle(sock, game):
 			if subcode == 1:
 				game.advanceCycle()
 			if subcode == 2:
-				result = eval(''.join(param))
+				result = eval(' '.join(param))
 				message.send(0, 0, [result])
 				continue
 			if subcode == 3:

@@ -1,7 +1,7 @@
 from map import Map
 from player import Player
 import loader
-import time
+import time, random
 
 class Game:
 	
@@ -127,6 +127,19 @@ class Game:
 	
 	def load(self):
 		pass
+	
+	def fight(self, entity1, entity2):
+		if entity1.parent != entity2.parent:
+			return 1
+		strength1 = sum([thing._fightStrength() for thing in self.map.getLocationArray(entity1)])
+		strength2 = sum([thing._fightStrength() for thing in self.map.getLocationArray(entity2)])
+		value1 = sum([random.randint(1, strength1) for _ in xrange(2)]) - 1
+		value2 = sum([random.randint(1, strength2) for _ in xrange(2)]) - 1
+		entity1.hurt(value2)
+		entity2.hurt(value1)
+		
+		return 0
+
 class Message:
 	
 	game = None

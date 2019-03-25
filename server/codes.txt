@@ -23,6 +23,7 @@
 	2 - 'controlled' things
 	3 - current dp
 	4 - check messages
+	5 - dp generation (including owned things)
 
 30 - vote to advance cycle
 	0 - no
@@ -40,6 +41,9 @@
 	0 - transfer DP
 	1 - list DP
 	2 - change name
+	3 - list fight strength
+	4 - engage in combat
+	5 - move entity
 
 60 - create entity
 	0 - land

@@ -67,8 +67,16 @@ def handleError(message):
 def printResponse():
 	print "\n".join(message.get()["param"])
 
+def closeConnexion():
+	sendMessage(1)
+	message.socket.close()
+
 while 1:
-	order = raw_input("> ").split(" ")
+	try:
+		order = raw_input("> ").split(" ")
+	except EOFError as e:
+		closeConnexion()
+		break
 	command = order[0].lower()
 	if "help" in command:
 		print "idk"
@@ -85,8 +93,9 @@ while 1:
 		sendMessage(20, 9)
 		printResponse()
 	elif "order" in command:
-		subcodeDict = {"transfer": 0, "listDP": 1, "name": 2}
-		subcode = subcodeDict[raw_input("Enter command for entity (%s): " % subcodeDict)]
+		subcodeArray = ["transfer", "listDP", "name", "listfight", "fight", "move"]
+		choice = raw_input("Enter command for entity (%s): " % subcodeArray)
+		subcode = -1 if not choice in subcodeArray else subcodeArray.index(choice)
 		entityID = raw_input("Enter UID of entity to command: ")
 		if subcode == 0:
 			dpType = raw_input("Enter DP type to transfer: ")
@@ -98,6 +107,14 @@ while 1:
 		elif subcode == 2:
 			name = raw_input("Enter the new name of the entity: ")
 			sendMessage(53, subcode, [entityID, name])
+		elif subcode == 3:
+			sendMessage(53, subcode, [entityID])
+		elif subcode == 4:
+			id = raw_input("Enter the id of the of entity to fight: ")
+			sendMessage(53, subcode, [entityID, id])
+		elif subcode == 5:
+			id = raw_input("Enter the id of the of entity to move to: ")
+			sendMessage(53, subcode, [entityID, id])
 		else:
 			sendMessage(0, 0, [])
 			print "not valid thingy"
@@ -126,6 +143,9 @@ while 1:
 		content = raw_input("Enter the message you want to send: ")
 		sendMessage(50, 0, [to, content])
 		message.get()
+	elif "owned" in command:
+		message.send(21, 2)
+		printResponse()
 	elif "tiles" in command:
 		sendMessage(20, 0)
 		response = message.get()
@@ -148,6 +168,9 @@ while 1:
 		sendMessage(21, 3)
 		response = message.get()["param"]
 		print "You currently have %s generic, %s %s, %s %s, and %s %s DP" % (response[0], response[1], domain, response[2], subdomain1, response[3], subdomain2)
+	elif "dptotal" in command:
+		sendMessage(21, 5)
+		print "You, and your controlled things, currently generate %s DP" % (message.get()["param"][0])
 	elif "dp" in command:
 		sendMessage(21, 0)
 		response = message.get()
@@ -158,8 +181,7 @@ while 1:
 		response = message.get()
 		print "Your greater domain is %s, and your subdomains are %s and %s" % tuple(response["param"])
 	elif "exit" in command or "stop" in command or "quit" in command:
-		sendMessage(1)
-		message.socket.close()
+		closeConnexion()
 		break
 	elif "create" in command:
 		sendMessage(20, 4)
@@ -205,5 +227,7 @@ while 1:
 		print "Unrecognised command: try again, or try 'help'"
 		continue
 	print ""
+
+print "\n\nShutting down..."
 
 #Do cleanup (but I guess there won't ever be any?)

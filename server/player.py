@@ -1,6 +1,7 @@
 
 import map
 import interpreter
+import util.functions
 
 LAND_COST = 1.0
 GENERATOR_COST = 4.0
@@ -22,12 +23,12 @@ class Player:
 		self.currentDP = {'generic': 0, domain: 0, subdomain1: 0, subdomain2: 0}
 		self.domainNames = [domain, subdomain1, subdomain2]
 		self.gameIndex = -1
+		self.owned = []
 		
 		if not uber:
 			game.addPlayer(self)
 		else:
 			self.children = [] # List so that uber player can be parent of races...
-			self.location = "Not"
 			game.players.append(self)
 			self.baseDP = self.currentDP = {'generic': float("inf")}
 			self.domainNames = ["generic", "generic", "generic"]
@@ -81,11 +82,11 @@ class Player:
 		map.Race(self.game.map, self, self.game.masterPlayer, RACE_COST, [], description)
 		return 0
 	
-	def createCreature(self, dpType, parent, description):
-		spendAttempt = self.__spend__(dpType, RACE_COST)
+	def createCreature(self, dpType, parent, race, description):
+		spendAttempt = self.__spend__(dpType, CREATURE_COST)
 		if spendAttempt:
 			return spendAttempt
-		map.Creature(self.game.map, self, parent, CREATURE_COST, [], description)
+		map.Creature(self.game.map, self, parent, race, CREATURE_COST, [], description)
 		return 0
 	
 	def addOrder(self, order):
@@ -103,3 +104,7 @@ class Player:
 	
 	def __order__(self, *args):
 		return [3, 0, ["This is a player..."]]
+	
+	def getOwnedArray(self, target=None):
+		if not target: target = self
+		return [target] + util.functions.foldr(util.functions.add, [], [self.getOwnedArray(thing) for thing in target.owned])

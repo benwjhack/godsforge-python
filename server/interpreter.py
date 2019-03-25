@@ -73,7 +73,7 @@ class Interpreter:
 				parent = self.game.map.getTile(x, y)
 			else:
 				parent = self.game.map.getEntity(id)
-			parentRace = self.game.map.getEntity(id)
+			parentRace = self.game.map.getEntity(int(param[5]))
 			if parentRace.type != "Race":
 				return [3, 0, ["Parent race needs to be a *race*"]]
 			response = player.createCreature(param[0], parent, parentRace, param[3])

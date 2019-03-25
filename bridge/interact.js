@@ -22,7 +22,7 @@ String.prototype.replaceAll = function(search, replacement) {
 var send = function(code, subcode, params){
 	nparam = []
 	for(var param of params){
-		nparam.push(param.replaceAll(":", "\c").replaceAll(";", "\s").replaceAll("\n", "\e"))
+		nparam.push(param.toString().replaceAll(":", "\c").replaceAll(";", "\s").replaceAll("\n", "\e"))
 	}
 	var toSend = SECRET + code + ":" + subcode + ":" + nparam.join(";")
 	console.log("sending: " + toSend)

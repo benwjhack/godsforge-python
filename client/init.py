@@ -188,10 +188,10 @@ while 1:
 		if message.get()["param"][0] == "False":
 			print "Game has not started: stop"
 			continue
-		categories = ["land", "generator", "race", "creature"]
+		categories = ["land", "generator", "race", "creature", "fortification", "equipment", "legend", "paragon"]
 		category = raw_input("Input what you would like to create (from %s): " % categories).lower()
 		category = categories.index(category)
-		if category in [0, 1, 3]:
+		if category in [0, 1, 3, 4, 5, 6, 7]:
 			dpType = raw_input("Enter the type of dp you would like to spend: ").lower()
 			if not dpType in ["generic", domain, subdomain1, subdomain2]:
 				print "invalid domain type, try again"
@@ -205,15 +205,20 @@ while 1:
 			else:
 				id = int(raw_input("id: "))
 				parentMessage = id
-			description = raw_input("Description (to be added in land description: ")
+			description = raw_input("Description (to be added in description: ")
 			story = raw_input("Summary (to be added to list of events): ")
 			params = [dpType, parentType, parentMessage, description, story]
 		elif category in [2]:
 			description = raw_input("Description (to be added in land description: ")
 			story = raw_input("Summary (to be added to list of events): ")
 			params = ["generic", "False", "0", description, story]
+		if category in [2]:
+			controlTypes = ["controlled", "autonomous"]
+			params.append(controlTypes.index(raw_input("Control type (%s): " % controlTypes)))
 		if category in [3]:
 			params.append(raw_input("ID of race to attach creature to: "))
+		if category in [3,4,5,6,7]:
+			params.append(raw_input("Quantity of DP to spend: "))
 		sendMessage(60, category, params)
 		response = message.get()
 		if response["code"] == 0:

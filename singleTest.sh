@@ -13,4 +13,4 @@ echo ""
 echo ""
 echo "----SERVER OUTPUT----"
 echo ""
-cat server/logs/log.txt
+tail -n 10 server/logs/log.txt

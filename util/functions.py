@@ -11,6 +11,9 @@ def foldr(cons, nils, xs):
 def add(a, b):
 	return a+b
 
+def _or(a, b):
+	return a or b
+
 def shuffled(xs): # Return a shuffled permuation of xs
 	ys = xs[:]
 	random.shuffle(ys) # Shuffles in place

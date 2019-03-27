@@ -61,7 +61,7 @@ class Interpreter:
 				return [response]
 		if subcode == 2: # Race
 			print str(player), "creating race with", param
-			response = player.createRace(param[0], param[3]) # Notably, param[2] is empty for consistency
+			response = player.createRace(param[0], param[3], int(param[5])) # Notably, param[2] is empty for consistency
 			if response == 0:
 				game.addStory(param[4])
 			else:
@@ -76,11 +76,69 @@ class Interpreter:
 			parentRace = self.game.map.getEntity(int(param[5]))
 			if parentRace.type != "Race":
 				return [3, 0, ["Parent race needs to be a *race*"]]
-			response = player.createCreature(param[0], parent, parentRace, param[3])
+			response = player.createCreature(param[0], float(param[6]), parent, parentRace, param[3])
 			if response == 0:
 				game.addStory(param[4])
 			else:
 				print "failed"
 			return [response]
-
-
+		if subcode == 4: # Fortification
+			print str(player), "creating fortification with", param
+			if parentType:
+				parent = self.game.map.getTile(x, y)
+			else:
+				parent = self.game.map.getEntity(id)
+			response = player.createFortification(param[0], float(param[5]), parent, param[3])
+			if response == 0:
+				game.addStory(param[4])
+			else:
+				print "failed"
+			if type(response) == list:
+				return response
+			else:
+				return [response]
+		if subcode == 5: # Equipment
+			print str(player), "creating equipment with", param
+			if parentType:
+				parent = self.game.map.getTile(x, y)
+			else:
+				parent = self.game.map.getEntity(id)
+			response = player.createEquipment(param[0], float(param[5]), parent, param[3])
+			if response == 0:
+				game.addStory(param[4])
+			else:
+				print "failed"
+			if type(response) == list:
+				return response
+			else:
+				return [response]
+		if subcode == 6: # Legend
+			print str(player), "creating legend with", param
+			if parentType:
+				parent = self.game.map.getTile(x, y)
+			else:
+				parent = self.game.map.getEntity(id)
+			response = player.createLegend(param[0], float(param[5]), parent, param[3])
+			if response == 0:
+				game.addStory(param[4])
+			else:
+				print "failed"
+			if type(response) == list:
+				return response
+			else:
+				return [response]
+		if subcode == 7: # Paragon
+			print str(player), "creating paragon with", param
+			if parentType:
+				parent = self.game.map.getTile(x, y)
+			else:
+				parent = self.game.map.getEntity(id)
+			response = player.createParagon(param[0], float(param[5]), parent, param[3])
+			if response == 0:
+				game.addStory(param[4])
+			else:
+				print "failed"
+			if type(response) == list:
+				return response
+			else:
+				return [response]

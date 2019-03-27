@@ -6,7 +6,6 @@ import util.functions
 LAND_COST = 1.0
 GENERATOR_COST = 4.0
 RACE_COST = 0.0
-CREATURE_COST = 1.0
 
 class Player:
 	
@@ -53,7 +52,8 @@ class Player:
 	def getCurrentDP(self):
 		return [self.currentDP[name] for name in ["generic"]+self.domainNames]
 	
-	def __spend__(self, dpType, amount):
+	def __spend__(self, dpType, amount, modifiers):
+		amount = map.cost(amount, modifiers)
 		if not dpType in self.currentDP or self.currentDP[dpType] < amount:
 			return [3, 0, ["Not enough DP - you need %s" % amount]]
 		self.currentDP[dpType] -= amount
@@ -62,31 +62,61 @@ class Player:
 	def createLand(self, dpType, x, y, description):
 		if sum([entity.type == "Land" for entity in self.game.map.getTile(x,y).children]) > 0: # If the tile already has a land
 			return [3, 0, ["There is already Land on this tile"]]
-		spendAttempt = self.__spend__(dpType, LAND_COST)
+		spendAttempt = self.__spend__(dpType, LAND_COST, [])
 		if spendAttempt:
 			return spendAttempt
 		map.Land(self.game.map, self, self.game.map.getTile(x,y), LAND_COST, [], description)
 		return 0
 	
 	def createGenerator(self, dpType, parent, description):
-		spendAttempt = self.__spend__(dpType, GENERATOR_COST)
+		spendAttempt = self.__spend__(dpType, GENERATOR_COST, [])
 		if spendAttempt:
 			return spendAttempt
 		map.Generator(self.game.map, self, parent, GENERATOR_COST, [], description, dpType)
 		return 0
 	
-	def createRace(self, dpType, description):
-		spendAttempt = self.__spend__(dpType, RACE_COST)
+	def createRace(self, dpType, description, controlType):
+		modifiers = ["autonomous" if controlType else "controlled"]
+		spendAttempt = self.__spend__(dpType, RACE_COST, modifiers)
 		if spendAttempt:
 			return spendAttempt
-		map.Race(self.game.map, self, self.game.masterPlayer, RACE_COST, [], description)
+		map.Race(self.game.map, self, self.game.masterPlayer, controlType, RACE_COST, modifiers, description)
 		return 0
 	
-	def createCreature(self, dpType, parent, race, description):
-		spendAttempt = self.__spend__(dpType, CREATURE_COST)
+	def createCreature(self, dpType, dpAmount, parent, race, description):
+		modifiers = ["autonomous" if race.controlType else "controlled"]
+		spendAttempt = self.__spend__(dpType, dpAmount, modifiers)
 		if spendAttempt:
 			return spendAttempt
-		map.Creature(self.game.map, self, parent, race, CREATURE_COST, [], description)
+		map.Creature(self.game.map, self, parent, race, dpAmount, modifiers, description)
+		return 0
+	
+	def createFortification(self, dpType, dpAmount, parent, description):
+		spendAttempt = self.__spend__(dpType, dpAmount, modifiers)
+		if spendAttempt:
+			return spendAttempt
+		map.Fortification(self.game.map, self, parent, dpAmount, modifiers, description)
+		return 0
+	
+	def createEquipment(self, dpType, dpAmount, parent, description):
+		spendAttempt = self.__spend__(dpType, dpAmount, [])
+		if spendAttempt:
+			return spendAttempt
+		map.Equipment(self.game.map, self, parent, dpAmount, [], description)
+		return 0
+	
+	def createLegend(self, dpType, dpAmount, parent, description):
+		spendAttempt = self.__spend__(dpType, dpAmount, [])
+		if spendAttempt:
+			return spendAttempt
+		map.Legend(self.game.map, self, parent, dpAmount, [], description)
+		return 0
+	
+	def createParagon(self, dpType, dpAmount, parent, description):
+		spendAttempt = self.__spend__(dpType, dpAmount, [])
+		if spendAttempt:
+			return spendAttempt
+		map.Paragon(self.game.map, self, parent, dpAmount, [], description)
 		return 0
 	
 	def addOrder(self, order):

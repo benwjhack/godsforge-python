@@ -44,12 +44,20 @@
 	3 - list fight strength
 	4 - engage in combat
 	5 - move entity
+	6 - move actions left
+	7 - toggle default hostility
+	8 - add/remove someone to hostile exceptions
+	9 - get hostility info
 
 60 - create entity
 	0 - land
 	1 - generator
 	2 - race
 	3 - creature
+	4 - fortification
+	5 - equipment
+	6 - legend
+	7 - paragon
 	100 - oscar
 
 

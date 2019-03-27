@@ -129,7 +129,7 @@ class Entity(object):
 		self.basedp = basedp
 		self.modifiers = modifiers
 		
-		self.effectivedp = basedp
+		self.effectivedp = cost(basedp, modifiers)
 		
 		self.type = type
 		
@@ -139,6 +139,9 @@ class Entity(object):
 		self.currentDP = {}
 		self.moveSpeed = 0
 		self.moveActions = self.moveSpeed
+		
+		self.defaultHostile = False
+		self.hostileExceptions = []
 	
 	def __order__(self, orderer, subcode, params):
 		if self.owner != orderer:
@@ -168,7 +171,6 @@ class Entity(object):
 		if subcode == 5: # Move entity
 			moveTo = self.map.getEntity(int(params[0]))
 			path = util.imperative.breadth_search(lambda x: x.adjacent(), self, moveTo)[0]
-			print path
 			result = 0
 			actuallyTraversed = []
 			for place in path[1:]:
@@ -176,6 +178,20 @@ class Entity(object):
 				if result == 1: break
 				actuallyTraversed.append(place)
 			return [result, 0, ["Ran out of movement (probably)" if result else "Success!"] + actuallyTraversed]
+		if subcode == 6: # Move actions left
+			return [0,0,[self.moveActions]]
+		if subcode == 7: # Toggle default hostility
+			self.defaultHostile = not self.defaultHostile
+			return [0,0,[self.defaultHostile]]
+		if subcode == 8: # Add/remove entity from hostility exceptions
+			entity = self.map.getEntity(int(param[0]))
+			if entity in self.hostileExceptions:
+				self.hostileExceptions.remove(entity)
+			else:
+				self.hostileExceptions.append(entity)
+			return [0,0,[entity in self.hostileExceptions]]
+		if subcode == 9: # Get hostility information
+			return [0,0,[self.defaultHostile]+self.hostileExceptions]
 	
 	def _getName(self):
 		return self.name
@@ -205,14 +221,22 @@ class Entity(object):
 		return 0
 	
 	def hurt(self, value):
-		self.basedp -= value
-		if self.basedp <= 0:
+		self.effectivedp -= value
+		if self.effectivedp <= 0:
 			self.parent.children.remove(self)
 			self.map.entities.remove(self)
 			print "%s died by hurt!" % (self._getName())
 	
 	def adjacent(self):
 		return [self.parent] + util.functions.shuffled(self.children)
+	
+	def isHostileTo(self, enemy):
+		def _hostile(entity):
+			if (entity.defaultHostile and (type(entity) == Creature and type(enemy) == Creature and entity.race == enemy.race)) or (entity.defaultHostile and enemy in entity.hostileExceptions):
+				return True
+			else:
+				return False
+		return util.functions.foldr(util.functions._or, False, map( _hostile, self.map.getLocationArray(self)))
 
 class Land(Entity):
 	
@@ -232,20 +256,24 @@ class Generator(Entity):
 		self.currentDP[self.dpType] = self.currentDP.setdefault(self.dpType, 0) + self.effectivedp / player.GENERATOR_COST
 	
 	def getDPGeneration(self):
-		return self.basedp / 4.0
+		return self.effectivedp / 4.0
+
+CONTROL_CONTROLLED = 0
+CONTROL_AUTOMATED  = 1
 
 class Race(Entity):
 	
-	def __init__(self, map, owner, parent, basedp, modifiers, description):
+	def __init__(self, map, owner, parent, controlType, basedp, modifiers, description):
 		super(Race, self).__init__(self.__class__.__name__, map, owner, parent, basedp, modifiers, description)
 		map.game.races.append(self)
 		self.trouble = 0
+		self.controlType = controlType
 	
 	def _details(self):
 		return "%s %s (%s); %s" % (self.type, self.name, self.id, self.description)
 	
 	def _fightStrength(self):
-		return self.basedp / 2.0
+		return self.effectivedp / 2.0
 
 class Creature(Entity):
 	
@@ -258,4 +286,38 @@ class Creature(Entity):
 		return "%s %s (%s): %sdp %s %s; %s" % (self.type, self.name, self.id, self.effectivedp, self.parent._getName(), self.race._getName(), self.description)
 	
 	def getDPGeneration(self):
-		return self.basedp / 4.0
+		return self.effectivedp / 4.0
+
+class Fortifications(Entity):
+	
+	def __init__(self, map, owner, parent, basedp, modifiers, description):
+		super(Fortifications, self).__init__(self.__class__.__name__, map, owner, parent, basedp, modifiers, description)
+	
+	def _fightStrength(self):
+		return self.effectivedp / 2.0
+
+class Equipment(Entity):
+	
+	def __init__(self, map, owner, parent, basedp, modifiers, description):
+		super(Equipment, self).__init__(self.__class__.__name__, map, owner, parent, basedp, modifiers, description)
+	
+	def _fightStrength(self):
+		return self.effectivedp
+
+class Legend(Entity):
+	
+	def __init__(self, map, owner, parent, basedp, modifiers, description):
+		super(Legend, self).__init__(self.__class__.__name__, map, owner, parent, basedp, modifiers, description)
+
+class Paragon(Entity):
+	
+	def __init__(self, map, owner, parent, basedp, modifiers, description):
+		super(Paragon, self).__init__(self.__class__.__name__, map, owner, parent, basedp, modifiers, description)
+
+
+costing = {"autonomous": 0.5, "controlled": 1.0, "military": 1.5, "mobile": 1.5, "fertile": 2.0}
+def cost(basedp, modifiers):
+	answer = basedp
+	for modifier in modifiers:
+		answer /= costing[modifier]
+	return answer

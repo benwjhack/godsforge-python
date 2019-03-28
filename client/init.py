@@ -96,11 +96,11 @@ while 1:
 		subcodeArray = ["transfer", "listDP", "name", "listfight", "fight", "move"]
 		choice = raw_input("Enter command for entity (%s): " % subcodeArray)
 		subcode = -1 if not choice in subcodeArray else subcodeArray.index(choice)
-		entityID = raw_input("Enter UID of entity to command: ")
+		entityID = int(raw_input("Enter UID of entity to command: "))
 		if subcode == 0:
 			dpType = raw_input("Enter DP type to transfer: ")
-			amount = raw_input("Enter amount: ")
-			uid = raw_input("Enter UID to transfer to: ")
+			amount = int(raw_input("Enter amount: "))
+			uid = int(raw_input("Enter UID to transfer to: "))
 			sendMessage(53, subcode, [entityID, dpType, amount, uid])
 		elif subcode == 1:
 			sendMessage(53, subcode, [entityID])
@@ -110,10 +110,10 @@ while 1:
 		elif subcode == 3:
 			sendMessage(53, subcode, [entityID])
 		elif subcode == 4:
-			id = raw_input("Enter the id of the of entity to fight: ")
+			id = int(raw_input("Enter the id of the of entity to fight: "))
 			sendMessage(53, subcode, [entityID, id])
 		elif subcode == 5:
-			id = raw_input("Enter the id of the of entity to move to: ")
+			id = int(raw_input("Enter the id of the of entity to move to: "))
 			sendMessage(53, subcode, [entityID, id])
 		else:
 			sendMessage(0, 0, [])
@@ -137,9 +137,7 @@ while 1:
 		sendMessage(21, 4)
 		printResponse()
 	elif "message" in command:
-		to = raw_input("Enter the UID of the entity you want to message: ")
-		if sum([not c in "0123456" for c in to]):
-			print "Not a valid UID"
+		to = int(raw_input("Enter the UID of the entity you want to message: "))
 		content = raw_input("Enter the message you want to send: ")
 		sendMessage(50, 0, [to, content])
 		message.get()
@@ -149,15 +147,14 @@ while 1:
 	elif "tiles" in command:
 		sendMessage(20, 0)
 		response = message.get()
-		print response["param"]
 		print "\n\n".join(response["param"])
 	elif "story" in command:
 		sendMessage(20, 6)
 		response = message.get()
 		print response["param"][0]
 	elif "tile" in command:
-		x = raw_input("x: ")
-		y = raw_input("y: ")
+		x = int(raw_input("x: "))
+		y = int(raw_input("y: "))
 		sendMessage(20, 5, [x, y])
 		print message.get()["param"][0]
 	elif "currentdp" in command:
@@ -192,7 +189,7 @@ while 1:
 		category = raw_input("Input what you would like to create (from %s): " % categories).lower()
 		category = categories.index(category)
 		if category in [0, 1, 3, 4, 5, 6, 7]:
-			dpType = raw_input("Enter the type of dp you would like to spend: ").lower()
+			dpType = raw_input("Enter the type of dp you would like to spend: ")
 			if not dpType in ["generic", domain, subdomain1, subdomain2]:
 				print "invalid domain type, try again"
 				continue
@@ -205,20 +202,20 @@ while 1:
 			else:
 				id = int(raw_input("id: "))
 				parentMessage = id
-			description = raw_input("Description (to be added in description: ")
+			description = raw_input("Description (to be added in description): ")
 			story = raw_input("Summary (to be added to list of events): ")
 			params = [dpType, parentType, parentMessage, description, story]
 		elif category in [2]:
-			description = raw_input("Description (to be added in land description: ")
+			description = raw_input("Description (to be added in description): ")
 			story = raw_input("Summary (to be added to list of events): ")
 			params = ["generic", "False", "0", description, story]
 		if category in [2]:
 			controlTypes = ["controlled", "autonomous"]
 			params.append(controlTypes.index(raw_input("Control type (%s): " % controlTypes)))
 		if category in [3]:
-			params.append(raw_input("ID of race to attach creature to: "))
+			params.append(int(raw_input("ID of race to attach creature to: ")))
 		if category in [3,4,5,6,7]:
-			params.append(raw_input("Quantity of DP to spend: "))
+			params.append(int(raw_input("Quantity of DP to spend: ")))
 		sendMessage(60, category, params)
 		response = message.get()
 		if response["code"] == 0:

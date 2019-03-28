@@ -76,6 +76,8 @@ class Game:
 	
 	def initCycle(self):
 		self.resetVotes()
+		for entity in self.map.entities:
+			self.preCycle()
 		for player in self.players:
 			player.initCycle()
 		for entity in self.map.entities:

@@ -71,7 +71,11 @@ class Map(object):
 				dest.parent = temp
 			else:
 				return 1
-		return 0
+		fights = []
+		for entity in target.parent:
+			if entity.isHostileTo(target):
+				fights.append(self.game.fight(target, entity))
+		return (fights if fights else 0)
 
 class Tile(object):
 	
@@ -80,6 +84,7 @@ class Tile(object):
 		self.children = []
 		self.location = (x,y)
 		self.id = map.generateID(self)
+		self.type = Tile
 	
 	def adjacentTiles(self):
 		locations = []
@@ -142,6 +147,10 @@ class Entity(object):
 		
 		self.defaultHostile = False
 		self.hostileExceptions = []
+		
+		self.living = 0.0
+		self.sustain = 0
+		self.currentSustain = 0
 	
 	def __order__(self, orderer, subcode, params):
 		if self.owner != orderer:
@@ -166,7 +175,7 @@ class Entity(object):
 		if subcode == 3: # Calculate fight strength
 			return [0, 0, [sum([thing._fightStrength() for thing in self.map.getLocationArray(self)])]]
 		if subcode == 4: # Do the fight
-			result = game.fight(self, map.getEntity(int(param[0])))
+			result = self.game.fight(self, map.getEntity(int(param[0])))
 			return [not result]
 		if subcode == 5: # Move entity
 			moveTo = self.map.getEntity(int(params[0]))
@@ -175,9 +184,9 @@ class Entity(object):
 			actuallyTraversed = []
 			for place in path[1:]:
 				result = self.map.move(self, place)
-				if result == 1: break
+				if result: break
 				actuallyTraversed.append(place)
-			return [result, 0, ["Ran out of movement (probably)" if result else "Success!"] + actuallyTraversed]
+			return [1 if result else 0, 0, ["Ran out of movement (probably) - " + str(result) if result else "Success!"] + actuallyTraversed]
 		if subcode == 6: # Move actions left
 			return [0,0,[self.moveActions]]
 		if subcode == 7: # Toggle default hostility
@@ -211,8 +220,25 @@ class Entity(object):
 	def _fightStrength(self):
 		return 0
 	
+	def preCycle(self):
+		self.sustainCurrent = self.sustain
+	
 	def initCycle(self):
 		self.moveActions = self.moveSpeed
+		if self.living != 0:
+			currentEntity = self.parent
+			fedAmount = 0
+			while currentEntity.type != Tile:
+				need = self.living - fedAmount
+				if need > currentEntity.sustainCurrent:
+					fedAmount += need
+					currentEntity.sustainCurrent -= need
+				else:
+					fedAmount += currentEntity.sustainCurrent
+					currentEntity.sustainCurrent = 0
+				currentEntity = currentEntity.parent
+			if fedAmount < self.living:
+				self.effectivedp -= (self.living - fedAmount) / 2.0
 	
 	def message(self, message):
 		self.owner.message(message)
@@ -243,6 +269,7 @@ class Land(Entity):
 	def __init__(self, map, owner, parent, basedp, modifiers, description):
 		super(Land, self).__init__(self.__class__.__name__, map, owner, parent, basedp, modifiers, description)
 		self.name = "Land (%s, %s)" % parent.location
+		self.sustain = 4.0
 	
 
 class Generator(Entity):
@@ -281,6 +308,7 @@ class Creature(Entity):
 		super(Creature, self).__init__(self.__class__.__name__, map, owner, parent, basedp, modifiers, description)
 		self.race = race
 		self.moveSpeed = 2
+		self.living = 1.0
 	
 	def _details(self):
 		return "%s %s (%s): %sdp %s %s; %s" % (self.type, self.name, self.id, self.effectivedp, self.parent._getName(), self.race._getName(), self.description)
@@ -308,6 +336,8 @@ class Legend(Entity):
 	
 	def __init__(self, map, owner, parent, basedp, modifiers, description):
 		super(Legend, self).__init__(self.__class__.__name__, map, owner, parent, basedp, modifiers, description)
+		self.living = 1/4.0
+		self.moveSpeed = 2
 
 class Paragon(Entity):
 	

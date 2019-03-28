@@ -81,7 +81,10 @@ class Interpreter:
 				game.addStory(param[4])
 			else:
 				print "failed"
-			return [response]
+			if type(response) == list:
+				return response
+			else:
+				return [response]
 		if subcode == 4: # Fortification
 			print str(player), "creating fortification with", param
 			if parentType:

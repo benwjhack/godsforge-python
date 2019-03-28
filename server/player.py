@@ -53,7 +53,6 @@ class Player:
 		return [self.currentDP[name] for name in ["generic"]+self.domainNames]
 	
 	def __spend__(self, dpType, amount, modifiers):
-		amount = map.cost(amount, modifiers)
 		if not dpType in self.currentDP or self.currentDP[dpType] < amount:
 			return [3, 0, ["Not enough DP - you need %s" % amount]]
 		self.currentDP[dpType] -= amount

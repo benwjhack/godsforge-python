@@ -1,4 +1,4 @@
-sudo apt install python-pip
+sudo apt -y install python-pip
 sudo pip install pipreqs
 ./generateRequirements.bash
 cd server

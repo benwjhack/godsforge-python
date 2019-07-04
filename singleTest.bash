@@ -1,12 +1,12 @@
 #! /bin/bash
 
 cd server
-./startServer.sh
+./startServer.bash
 sleep 0.5 # To allow server time to spin up
 cd ../client
 python init.py
 cd ../server
-./killServer.sh
+./killServer.bash
 cd ..
 
 echo ""

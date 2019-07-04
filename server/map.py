@@ -112,6 +112,9 @@ class Tile(object):
 	
 	def __order__(self, *args):
 		return [3, 0, ["This is a tile..."]]
+	
+	def preCycle(self):
+		pass
 
 class Entity(object):
 	

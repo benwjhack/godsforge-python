@@ -137,3 +137,6 @@ class Player:
 	def getOwnedArray(self, target=None):
 		if not target: target = self
 		return [target] + util.functions.foldr(util.functions.add, [], [self.getOwnedArray(thing) for thing in target.owned])
+	
+	def preCycle(self):
+		pass

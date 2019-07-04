@@ -1,0 +1,42 @@
+[
+	{
+		"x":0,
+		"y":0,
+		"type": "legend",
+		"name": "Gola the Dire",
+		"value": 6,
+		"keywords":[
+			"voidwalk"
+		],
+		"traits":[
+			"Legend-er",
+			"Magician"
+		]
+	},
+	{
+		"x":0,
+		"y":0,
+		"type": "fortification",
+		"name": "Dire Castle",
+		"value": 2,
+		"keywords": [
+			"shield"
+		]
+	},
+	{
+		"x":0,
+		"y":1,
+		"type": "land",
+		"name": "The Pits",
+		"value": 1,
+		"colour": "#77300b"
+	},
+	{
+		"x":0,
+		"y":2,
+		"type": "land",
+		"name": "The Pits",
+		"value": 1,
+		"colour": "#77300b"
+	}
+]

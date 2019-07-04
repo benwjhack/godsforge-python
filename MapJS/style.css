@@ -1,0 +1,15 @@
+.header {
+	text-align:center;
+    padding:5px;
+}
+
+.canvas-container {
+	text-align:center;
+	width:50%;
+	float:left;
+}
+
+.info-panel {
+	width:50%;
+	float:right;
+}

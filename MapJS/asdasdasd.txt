@@ -1,0 +1,10 @@
+while(1){
+    x = prompt("x");
+    y = prompt("y")
+    type = prompt("type")
+    name = prompt("name")
+    value = prompt("value")
+    keywords = prompt("keywords").split(" ")
+    traits = prompt("traits").split(" ")
+    console.log('{"x":${x},"y":${y},"type":${type},"name":${name},"value":${value}')
+}

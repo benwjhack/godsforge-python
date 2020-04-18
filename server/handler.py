@@ -1,6 +1,7 @@
 
 import util.message
 from player import Player
+from order import Order
 
 TEST = True
 
@@ -85,11 +86,13 @@ def handle(sock, game):
 			message.send(0)
 		
 		if code >= 40 and code < 70:
-			response = selectedPlayer.interpreter.interpret([code, subcode, param])
+			order = Order(selectedPlayer, code, subcode, param)
+			response = selectedPlayer.interpreter.interpret(order)
 			message.send(*response)
 		
 		if code == 70:
-			game.addOrder(selectedPlayer, [int(param[0]), int(param[1]), param[2:]])
+			order = Order(selectedPlayer, int(param[0]), int(param[1]), param[2:])
+			game.addOrder(order)
 			message.send(0)
 		
 		if code == 100:

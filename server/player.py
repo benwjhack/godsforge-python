@@ -58,65 +58,65 @@ class Player:
 		self.currentDP[dpType] -= amount
 		return 0
 	
-	def createLand(self, dpType, x, y, description):
+	def createLand(self, dpType, x, y, description, id=None):
 		if sum([entity.type == "Land" for entity in self.game.map.getTile(x,y).children]) > 0: # If the tile already has a land
 			return [3, 0, ["There is already Land on this tile"]]
 		spendAttempt = self.__spend__(dpType, LAND_COST, [])
 		if spendAttempt:
 			return spendAttempt
-		map.Land(self.game.map, self, self.game.map.getTile(x,y), LAND_COST, [], description)
-		return 0
+		id = map.Land(self.game.map, self, self.game.map.getTile(x,y), LAND_COST, [], description).id
+		return [0, 0, [id]]
 	
-	def createGenerator(self, dpType, parent, description):
+	def createGenerator(self, dpType, parent, description, id=None):
 		spendAttempt = self.__spend__(dpType, GENERATOR_COST, [])
 		if spendAttempt:
 			return spendAttempt
-		map.Generator(self.game.map, self, parent, GENERATOR_COST, [], description, dpType)
-		return 0
+		id = map.Generator(self.game.map, self, parent, GENERATOR_COST, [], description, dpType).id
+		return [0, 0, [id]]
 	
-	def createRace(self, dpType, description, controlType):
+	def createRace(self, dpType, description, controlType, id=None):
 		modifiers = ["autonomous" if controlType else "controlled"]
 		spendAttempt = self.__spend__(dpType, RACE_COST, modifiers)
 		if spendAttempt:
 			return spendAttempt
-		map.Race(self.game.map, self, self.game.masterPlayer, controlType, RACE_COST, modifiers, description)
-		return 0
+		id = map.Race(self.game.map, self, self.game.masterPlayer, controlType, RACE_COST, modifiers, description).id
+		return [0, 0, [id]]
 	
-	def createCreature(self, dpType, dpAmount, parent, race, description):
+	def createCreature(self, dpType, dpAmount, parent, race, description, id=None):
 		modifiers = ["autonomous" if race.controlType else "controlled"]
 		spendAttempt = self.__spend__(dpType, dpAmount, modifiers)
 		if spendAttempt:
 			return spendAttempt
-		map.Creature(self.game.map, self, parent, race, dpAmount, modifiers, description)
-		return 0
+		id = map.Creature(self.game.map, self, parent, race, dpAmount, modifiers, description).id
+		return [0, 0, [id]]
 	
-	def createFortification(self, dpType, dpAmount, parent, description):
+	def createFortification(self, dpType, dpAmount, parent, description, id=None):
 		spendAttempt = self.__spend__(dpType, dpAmount, modifiers)
 		if spendAttempt:
 			return spendAttempt
-		map.Fortification(self.game.map, self, parent, dpAmount, modifiers, description)
-		return 0
+		id = map.Fortification(self.game.map, self, parent, dpAmount, modifiers, description).id
+		return [0, 0, [id]]
 	
-	def createEquipment(self, dpType, dpAmount, parent, description):
+	def createEquipment(self, dpType, dpAmount, parent, description, id=None):
 		spendAttempt = self.__spend__(dpType, dpAmount, [])
 		if spendAttempt:
 			return spendAttempt
-		map.Equipment(self.game.map, self, parent, dpAmount, [], description)
-		return 0
+		id = map.Equipment(self.game.map, self, parent, dpAmount, [], description).id
+		return [0, 0, [id]]
 	
-	def createLegend(self, dpType, dpAmount, parent, description):
+	def createLegend(self, dpType, dpAmount, parent, description, id=None):
 		spendAttempt = self.__spend__(dpType, dpAmount, [])
 		if spendAttempt:
 			return spendAttempt
-		map.Legend(self.game.map, self, parent, dpAmount, [], description)
-		return 0
+		id = map.Legend(self.game.map, self, parent, dpAmount, [], description).id
+		return [0, 0, [id]]
 	
-	def createParagon(self, dpType, dpAmount, parent, description):
+	def createParagon(self, dpType, dpAmount, parent, description, id=None):
 		spendAttempt = self.__spend__(dpType, dpAmount, [])
 		if spendAttempt:
 			return spendAttempt
-		map.Paragon(self.game.map, self, parent, dpAmount, [], description)
-		return 0
+		id = map.Paragon(self.game.map, self, parent, dpAmount, [], description).id
+		return [0, 0, [id]]
 	
 	def addOrder(self, order):
 		self.orders.append(order)

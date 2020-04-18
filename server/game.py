@@ -44,8 +44,9 @@ class Game:
 				return player
 		return None
 	
-	def addOrder(self, player, order):
-		self.orders.append([player, order])
+	def addOrder(self, order):
+		order.setDelayed()
+		self.orders.append(order)
 		player.addOrder(order)
 	
 	def sendMessage(self, sender, receiverUID, content):
@@ -85,7 +86,9 @@ class Game:
 		# Not sure if order will matter- since player.initCycle has already been called, players no longer remember their orders, even if the game does
 		for order in self.orders:
 			player, order = order
-			response = player.interpret(order)
+			id = [-1]
+			order = order[:-1]
+			response = player.interpret(order, id=id)
 			formattedString = "The order %s has produced result code %s" % (str(order), response)
 			self.sendGameMessage(player.UID, formattedString)
 		self.orders = []

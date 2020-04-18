@@ -8,6 +8,7 @@ class Map(object):
 		self.tiles = []
 		self.IDcounter = 0
 		self.entities = []
+		self.reservedIDs = []
 	
 	def initTiles(self, minX, maxX, minY, maxY):
 		self.minX = minX
@@ -23,6 +24,12 @@ class Map(object):
 		self.entities.append(thing)
 		temp = self.IDcounter
 		self.IDcounter += 1
+		return temp
+	
+	def reserveID(self):
+		temp = self.IDcounter
+		self.IDcounter += 1
+		self.reservedIDs.append(temp)
 		return temp
 	
 	def getTile(self, x, y):
